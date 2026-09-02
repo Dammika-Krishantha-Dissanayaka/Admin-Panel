@@ -216,9 +216,10 @@
 
                 <!-- Tabs -->
                 <div class="tabs" id="adminTabs">
-                    <button class="tab active" onclick="showTab('payments')">💰 Payment Requests</button>
-                    <button class="tab" onclick="showTab('users')">👥 All Users</button>
-                    <button class="tab" onclick="showTab('active')">✅ Active Users</button>
+                    <button class="tab active" onclick="showTab('payments', event)">💰 Payment Requests</button>
+                    <button class="tab" onclick="showTab('users', event)">👥 All Users</button>
+                    <button class="tab" onclick="showTab('active', event)">✅ Active Users</button>
+                    <button class="tab" onclick="showTab('resultsUpload', event)">📤 Upload Results</button>
                 </div>
 
                 <!-- Payments Tab -->
@@ -379,7 +380,8 @@
 
         let allUsers = [], paymentRequests = [];
         let selectedUserIds = new Set();
-        let revenueChart, userStatusChart;
+        let revenueChartInstance = null;
+        let userStatusChartInstance = null;
         let currentUserPage = 1;
         const usersPerPage = 10;
 
@@ -435,20 +437,11 @@
 
         // ==================== LOAD ALL DATA ====================
         async function loadAllData() {
-            await loadStats();
+            await updateCardBadges();
             await loadPayments();
             await loadUsers();
             await loadActiveUsers();
-            await updateCardBadges();
-            initCharts();
-        }
-
-        async function loadStats() {
-            const users = await db.collection('users').get();
-            const pendingPayments = await db.collection('paymentRequests').where('status', '==', 'pending').get();
-            const activeUsers = await db.collection('users').where('status', '==', 'approved').get();
-            const expiredUsers = await db.collection('users').where('status', '==', 'expired').get();
-            // Badges update in updateCardBadges()
+            await initCharts();
         }
 
         async function updateCardBadges() {
@@ -509,6 +502,17 @@
         };
 
         window.filterPayments = function() { renderPayments(); };
+
+        // ==================== EXPORT PAYMENTS (FIXED) ====================
+        window.exportPaymentsToCSV = async function() {
+            let csv = "Date,User,Phone,Amount,Note,Status\n";
+            const snapshot = await db.collection('paymentRequests').get();
+            snapshot.forEach(doc => {
+                const p = doc.data();
+                csv += `"${new Date(p.paymentDate).toLocaleDateString()}","${p.userName}","${p.userPhone}","${p.amount}","${p.note||''}","${p.status}"\n`;
+            });
+            downloadCSV(csv, "payments_export.csv");
+        };
 
         // ==================== USERS ====================
         async function loadUsers() {
@@ -636,20 +640,22 @@
             await loadAllData();
         };
 
-        // ==================== BULK EXPIRY UPDATE ====================
+        // ==================== BULK EXPIRY UPDATE (FIXED TIMEZONE) ====================
         window.bulkUpdateExpiry = async function() {
             const newExpiryDate = document.getElementById('bulkExpiryDate').value;
             if (!newExpiryDate) { alert('Please select a date'); return; }
             if (!confirm(`⚠️ Update ALL users expiry to ${newExpiryDate}?`)) return;
 
-            const expiryTimestamp = firebase.firestore.Timestamp.fromDate(new Date(newExpiryDate));
+            // Use UTC to avoid timezone shift
+            const dateObj = new Date(newExpiryDate + 'T00:00:00');
+            const expiryTimestamp = firebase.firestore.Timestamp.fromDate(dateObj);
             const usersSnapshot = await db.collection('users').get();
             let count = 0;
             for (const doc of usersSnapshot.docs) {
                 try {
                     await db.collection('users').doc(doc.id).update({
                         expiryDate: expiryTimestamp,
-                        status: new Date(newExpiryDate) > new Date() ? 'approved' : 'expired'
+                        status: dateObj > new Date() ? 'approved' : 'expired'
                     });
                     count++;
                 } catch(e) {}
@@ -675,8 +681,12 @@
             }).join('') || '<tr><td colspan="5">No active users</td></tr>';
         }
 
-        // ==================== CHARTS ====================
+        // ==================== CHARTS (FIXED: destroy before create) ====================
         async function initCharts() {
+            // Destroy previous charts if they exist
+            if (revenueChartInstance) revenueChartInstance.destroy();
+            if (userStatusChartInstance) userStatusChartInstance.destroy();
+
             const active = (await db.collection('users').where('status', '==', 'approved').get()).size;
             const pending = (await db.collection('users').where('status', '==', 'pending').get()).size;
             const expired = (await db.collection('users').where('status', '==', 'expired').get()).size;
@@ -684,7 +694,7 @@
             const ctx1 = document.getElementById('revenueChart').getContext('2d');
             const ctx2 = document.getElementById('userStatusChart').getContext('2d');
 
-            new Chart(ctx1, {
+            revenueChartInstance = new Chart(ctx1, {
                 type: 'line',
                 data: {
                     labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
@@ -697,7 +707,7 @@
                 }
             });
 
-            new Chart(ctx2, {
+            userStatusChartInstance = new Chart(ctx2, {
                 type: 'doughnut',
                 data: {
                     labels: ['Active', 'Pending', 'Expired'],
@@ -709,7 +719,7 @@
             });
         }
 
-        // ==================== EXPORT FUNCTIONS ====================
+        // ==================== EXPORT USERS ====================
         window.exportUsersToCSV = function() {
             let csv = "Name,Phone,Status,Expiry Date,Devices\n";
             allUsers.forEach(u => {
@@ -718,17 +728,6 @@
             });
             downloadCSV(csv, "users_export.csv");
         };
-
-        window.exportPaymentsToCSV = function() {
-            let csv = "Date,User,Phone,Amount,Note,Status\n";
-            const snapshot = await db.collection('paymentRequests').get();
-            snapshot.forEach(doc => {
-                const p = doc.data();
-                csv += `"${new Date(p.paymentDate).toLocaleDateString()}","${p.userName}","${p.userPhone}","${p.amount}","${p.note||''}","${p.status}"\n`;
-            });
-            downloadCSV(csv, "payments_export.csv");
-        };
-
 
         // ==================== RESULTS UPLOAD ====================
         function setDefaultResultUploadDate(){
@@ -1046,7 +1045,6 @@
             try{
                 const ref = storage.ref(`results/${dateStr}/${fileName}`);
                 try{ await ref.delete(); }catch(storageError){
-                    // If the object is already missing, still remove the Firestore URL.
                     if(storageError.code !== 'storage/object-not-found') throw storageError;
                 }
 
@@ -1095,30 +1093,35 @@
 
         // Load the manager automatically when the Upload Results tab is opened.
         const originalShowTab = window.showTab;
-        window.showTab = function(tab){
-            originalShowTab(tab);
+        window.showTab = function(tab, ev){
+            if (typeof originalShowTab === 'function') {
+                originalShowTab(tab, ev);
+            }
             if(tab === 'resultsUpload'){
                 setDefaultResultUploadDate();
                 loadResultsManager();
             }
         };
 
-        // ==================== TAB SWITCHING ====================
-        window.showTab = function(tab) {
+        // ==================== TAB SWITCHING (FIXED: event param) ====================
+        window.showTab = function(tab, ev) {
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             const target = document.getElementById(tab + 'Tab');
             if(target) target.classList.add('active');
-            const clicked = (typeof event !== 'undefined' && event.target) ? event.target.closest('.tab') : null;
+            const clicked = ev?.target?.closest?.('.tab') || null;
             if(clicked) clicked.classList.add('active');
             const labelMap = {payments:'Payment Requests',users:'All Users',active:'Active Users',resultsUpload:'Upload Results'};
             document.getElementById('pageTitle').innerHTML = clicked?.innerText || labelMap[tab] || 'Dashboard';
-            if(tab === 'resultsUpload') setDefaultResultUploadDate();
+            if(tab === 'resultsUpload') {
+                setDefaultResultUploadDate();
+                loadResultsManager();
+            }
         };
 
-        // Sidebar menu click
+        // Sidebar menu click (pass event)
         document.querySelectorAll('.menu-item').forEach(item => {
-            item.addEventListener('click', () => {
+            item.addEventListener('click', (event) => {
                 const tab = item.dataset.tab;
                 if (tab === 'dashboard') {
                     document.getElementById('pageTitle').innerHTML = 'Dashboard';
@@ -1133,7 +1136,7 @@
                         'resultsUpload': 'resultsUpload'
                     };
                     if (tabMap[tab]) {
-                        showTab(tabMap[tab]);
+                        showTab(tabMap[tab], event);
                     }
                 }
                 document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
