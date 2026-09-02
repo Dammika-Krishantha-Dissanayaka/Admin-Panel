@@ -89,150 +89,7 @@
             background: var(--primary-dark);
         }
 
-        .sidebar {
-            width: 270px;
-            background: linear-gradient(180deg, #0b1122 0%, #060a14 72%, #040810 100%);
-            color: #fff;
-            transition: 0.3s;
-            position: fixed;
-            height: 100vh;
-            overflow-y: auto;
-            z-index: 100;
-            border-right: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow: 18px 0 50px rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(20px);
-        }
-
-        .sidebar-header {
-            padding: 28px 15px 22px;
-            text-align: center;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-            background: linear-gradient(180deg, rgba(91, 124, 250, 0.10) 0%, transparent 100%);
-        }
-
-        .brand-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .brand-logo {
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3), 0 0 40px rgba(91, 124, 250, 0.05);
-            transition: 0.3s;
-            margin-bottom: 4px;
-        }
-        .brand-logo:hover {
-            transform: scale(1.05);
-            border-color: rgba(167, 139, 250, 0.3);
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4), 0 0 60px rgba(91, 124, 250, 0.1);
-        }
-
-        .sidebar-header h2 {
-            font-size: 22px;
-            margin: 0;
-            font-weight: 800;
-            letter-spacing: 0.5px;
-            background: linear-gradient(135deg, #ffffff 0%, #c4b5fd 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            line-height: 1.3;
-        }
-        .sidebar-header h2 span {
-            font-weight: 300;
-            opacity: 0.8;
-            -webkit-text-fill-color: #a78bfa;
-            background: none;
-        }
-
-        .brand-sub {
-            font-size: 10px;
-            color: #94a3b8;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            background: rgba(255, 255, 255, 0.03);
-            padding: 4px 16px;
-            border-radius: 30px;
-            border: 1px solid rgba(255, 255, 255, 0.04);
-            margin-top: 4px;
-            display: inline-flex;
-            align-items: center;
-            gap: 7px;
-            backdrop-filter: blur(5px);
-        }
-        .brand-sub i {
-            color: #34d399;
-            font-size: 9px;
-            filter: drop-shadow(0 0 6px rgba(52, 211, 153, 0.2));
-        }
-
-        [data-theme="light"] .sidebar-header {
-            background: linear-gradient(180deg, rgba(79, 124, 255, 0.06) 0%, transparent 100%);
-        }
-        [data-theme="light"] .sidebar-header h2 {
-            background: linear-gradient(135deg, #172033 0%, #4f7cff 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        [data-theme="light"] .brand-sub {
-            color: #66758b;
-            border-color: rgba(0, 0, 0, 0.04);
-            background: rgba(0, 0, 0, 0.02);
-        }
-
-        .sidebar-menu {
-            padding: 18px 12px;
-        }
-        .menu-item {
-            margin: 5px 0;
-            padding: 13px 15px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            cursor: pointer;
-            transition: all 0.25s ease;
-            color: rgba(255, 255, 255, 0.6);
-            border: 1px solid transparent;
-            border-radius: 13px;
-            font-size: 14px;
-            font-weight: 650;
-            position: relative;
-        }
-        .menu-item:hover {
-            background: rgba(255, 255, 255, 0.04);
-            color: #fff;
-            border-color: rgba(255, 255, 255, 0.06);
-            transform: translateX(4px);
-        }
-        .menu-item.active {
-            background: linear-gradient(90deg, rgba(91, 124, 250, 0.18), rgba(167, 139, 250, 0.06));
-            color: #fff;
-            border-color: rgba(91, 124, 250, 0.2);
-            box-shadow: inset 3px 0 #5b7cfa, 0 0 25px rgba(91, 124, 250, 0.05);
-        }
-        .menu-item i {
-            width: 23px;
-            text-align: center;
-            color: #6d8cff;
-            transition: 0.2s;
-        }
-        .menu-item.active i {
-            color: #a78bfa;
-        }
-
-        .main-content {
-            flex: 1;
-            margin-left: 270px;
-            padding: 22px;
-            min-width: 0;
-        }
-
+        /* ===== TOP BAR ===== */
         .top-bar {
             background: var(--card-bg);
             backdrop-filter: blur(20px);
@@ -248,6 +105,18 @@
             gap: 14px;
             box-shadow: 0 18px 45px rgba(0, 0, 0, 0.25);
             transition: 0.3s;
+        }
+        .top-bar-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .brand-logo-small {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid rgba(255, 255, 255, 0.08);
         }
         .top-bar h1 {
             font-size: 23px;
@@ -288,6 +157,69 @@
             border-color: #f87171;
         }
 
+        /* ===== HORIZONTAL TABS ===== */
+        .main-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 22px;
+            flex-wrap: wrap;
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 10px 15px;
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+        }
+        .main-tab {
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid transparent;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            border-radius: 12px;
+            transition: all 0.25s ease;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .main-tab:hover {
+            background: rgba(91, 124, 250, 0.08);
+            color: var(--text);
+            transform: translateY(-2px);
+            border-color: rgba(91, 124, 250, 0.2);
+        }
+        .main-tab.active {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: #fff;
+            border-color: transparent;
+            box-shadow: 0 9px 22px rgba(91, 124, 250, 0.25);
+        }
+        .main-tab i {
+            margin-right: 4px;
+        }
+
+        /* ===== TAB CONTENT ===== */
+        .tab-content {
+            display: none;
+            animation: fadeUp 0.25s ease;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(5px);
+            }
+            to {
+                opacity: 1;
+                transform: none;
+            }
+        }
+
+        /* ===== CARDS ===== */
         .card-menu-grid {
             display: grid;
             grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -354,6 +286,7 @@
             backdrop-filter: blur(10px);
         }
 
+        /* ===== BULK UPDATE CARD ===== */
         .bulk-update-card {
             background: linear-gradient(135deg, rgba(251, 191, 36, 0.15), rgba(245, 158, 11, 0.08));
             backdrop-filter: blur(20px);
@@ -396,6 +329,7 @@
             box-shadow: 0 10px 30px rgba(251, 191, 36, 0.3);
         }
 
+        /* ===== CHARTS ===== */
         .charts-row {
             display: grid;
             grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -429,38 +363,7 @@
             width: 100%;
         }
 
-        .tabs {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 18px;
-            flex-wrap: wrap;
-            border: 0;
-            padding: 0;
-        }
-        .tab {
-            padding: 10px 17px;
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid var(--border);
-            font-size: 13px;
-            font-weight: 700;
-            cursor: pointer;
-            border-radius: 12px;
-            transition: all 0.25s ease;
-            color: var(--text-secondary);
-        }
-        .tab:hover {
-            background: rgba(91, 124, 250, 0.08);
-            color: var(--text);
-            transform: translateY(-2px);
-            border-color: rgba(91, 124, 250, 0.2);
-        }
-        .tab.active {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: #fff;
-            border-color: transparent;
-            box-shadow: 0 9px 22px rgba(91, 124, 250, 0.25);
-        }
-
+        /* ===== SEARCH BAR ===== */
         .search-bar {
             display: flex;
             gap: 10px;
@@ -496,6 +399,7 @@
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
         }
 
+        /* ===== BUTTONS ===== */
         .btn-primary {
             background: linear-gradient(135deg, var(--primary), var(--primary-dark));
             color: #fff;
@@ -531,6 +435,7 @@
             filter: brightness(1.1);
         }
 
+        /* ===== TABLES ===== */
         .table-container {
             overflow-x: auto;
             background: var(--card-bg);
@@ -593,6 +498,7 @@
             border: 1px solid rgba(248, 113, 113, 0.1);
         }
 
+        /* ===== PAYMENT CARDS ===== */
         .payment-card {
             background: var(--card-bg);
             backdrop-filter: blur(20px);
@@ -622,6 +528,7 @@
             color: var(--text);
         }
 
+        /* ===== LOGIN BOX ===== */
         .login-box {
             max-width: 410px;
             margin: 70px auto;
@@ -664,6 +571,7 @@
             box-shadow: 0 15px 35px rgba(91, 124, 250, 0.2);
         }
 
+        /* ===== RESULTS UPLOAD ===== */
         .results-upload-card {
             background: var(--card-bg);
             backdrop-filter: blur(20px);
@@ -941,40 +849,20 @@
             .card-menu-grid {
                 grid-template-columns: repeat(2, minmax(0, 1fr));
             }
+            .main-tabs {
+                flex-direction: column;
+                gap: 6px;
+            }
+            .main-tab {
+                justify-content: center;
+            }
         }
         @media (max-width: 768px) {
-            .sidebar {
-                transform: translateX(-100%);
-            }
-            .sidebar.open {
-                transform: translateX(0);
-            }
-            .main-content {
-                margin-left: 0;
-                padding: 15px;
-            }
-            .menu-toggle {
-                display: block !important;
-                position: fixed;
-                top: 15px;
-                left: 15px;
-                z-index: 1001;
-                background: var(--primary);
-                color: #fff;
-                border: 0;
-                padding: 11px 12px;
-                border-radius: 11px;
-                cursor: pointer;
-                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
-            }
             .card-menu-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
             .charts-row {
                 grid-template-columns: 1fr;
-            }
-            .top-bar {
-                padding-left: 60px;
             }
             .top-bar h1 {
                 font-size: 20px;
@@ -983,11 +871,6 @@
         @media (max-width: 520px) {
             .card-menu-grid {
                 grid-template-columns: 1fr;
-            }
-            .tabs .tab {
-                flex: 1;
-                min-width: 30%;
-                text-align: center;
             }
             .top-bar-actions {
                 width: 100%;
@@ -1001,44 +884,24 @@
                 margin: 55px 10px;
             }
         }
-        @media (min-width: 769px) {
-            .menu-toggle {
-                display: none !important;
-            }
-        }
     </style>
 </head>
 <body>
-    <button class="menu-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
     <div class="app-container">
-        <div class="sidebar" id="sidebar">
-            <div class="sidebar-header">
-                <div class="brand-container">
-                    <img class="brand-logo" src="https://firebasestorage.googleapis.com/v0/b/krishanlotterysystem.firebasestorage.app/o/logo%2Flogo_main%20(2).png?alt=media&token=3798585d-5d83-465f-b509-712a9fb6e5ca" alt="Krishan Lottery System Logo">
-                    <h2>Krishan Lottery <span>System</span></h2>
-                    <div class="brand-sub">
-                        <i class="fas fa-shield-alt"></i> Admin Control Panel
-                    </div>
-                </div>
-            </div>
-            <div class="sidebar-menu">
-                <div class="menu-item active" data-tab="dashboard"><i class="fas fa-chart-line"></i> Dashboard</div>
-                <div class="menu-item" data-tab="payments"><i class="fas fa-credit-card"></i> Payment Requests</div>
-                <div class="menu-item" data-tab="users"><i class="fas fa-users"></i> All Users</div>
-                <div class="menu-item" data-tab="active"><i class="fas fa-check-circle"></i> Active Users</div>
-                <div class="menu-item" data-tab="resultsUpload"><i class="fas fa-cloud-upload-alt"></i> Upload Results</div>
-            </div>
-        </div>
-
         <div class="main-content" id="mainContent">
+            <!-- TOP BAR -->
             <div class="top-bar">
-                <h1 id="pageTitle">Dashboard</h1>
+                <div class="top-bar-left">
+                    <img class="brand-logo-small" src="https://firebasestorage.googleapis.com/v0/b/krishanlotterysystem.firebasestorage.app/o/logo%2Flogo_main%20(2).png?alt=media&token=3798585d-5d83-465f-b509-712a9fb6e5ca" alt="Krishan Lottery System Logo">
+                    <h1 id="pageTitle">Dashboard</h1>
+                </div>
                 <div class="top-bar-actions">
                     <button class="theme-toggle" onclick="toggleTheme()"><i class="fas fa-moon"></i></button>
                     <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
                 </div>
             </div>
 
+            <!-- LOGIN SECTION -->
             <div id="loginSection" class="login-box">
                 <h2 style="text-align:center; margin-bottom:20px;">Admin Login</h2>
                 <input type="email" id="adminEmail" placeholder="admin@lottery.com" value="admin@lottery.com">
@@ -1047,60 +910,67 @@
                 <div id="loginMsg" style="margin-top:16px; text-align:center;"></div>
             </div>
 
+            <!-- DASHBOARD CONTENT -->
             <div id="dashboardContent" style="display:none;">
-                <div class="card-menu-grid">
-                    <div class="menu-card" onclick="showTab('payments', event)" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-                        <i class="fas fa-credit-card" style="color: white;"></i>
-                        <h3>Payment Requests</h3>
-                        <p>Pending payments</p>
-                        <div class="card-badge" id="pendingCountBadge">0</div>
-                    </div>
-                    <div class="menu-card" onclick="showTab('users', event)" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
-                        <i class="fas fa-users" style="color: white;"></i>
-                        <h3>All Users</h3>
-                        <p>Total registered</p>
-                        <div class="card-badge" id="totalUsersBadge">0</div>
-                    </div>
-                    <div class="menu-card" onclick="showTab('active', event)" style="background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);">
-                        <i class="fas fa-check-circle" style="color: white;"></i>
-                        <h3>Active Users</h3>
-                        <p>Approved access</p>
-                        <div class="card-badge" id="activeUsersBadge">0</div>
-                    </div>
-                    <div class="menu-card" onclick="showTab('users', event)" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">
-                        <i class="fas fa-clock" style="color: white;"></i>
-                        <h3>Expired Users</h3>
-                        <p>Need renewal</p>
-                        <div class="card-badge" id="expiredUsersBadge">0</div>
-                    </div>
+                <!-- MAIN TABS (Horizontal) -->
+                <div class="main-tabs" id="mainTabs">
+                    <button class="main-tab active" data-tab="dashboard"><i class="fas fa-chart-line"></i> Dashboard</button>
+                    <button class="main-tab" data-tab="payments"><i class="fas fa-credit-card"></i> Payments</button>
+                    <button class="main-tab" data-tab="users"><i class="fas fa-users"></i> Users</button>
+                    <button class="main-tab" data-tab="active"><i class="fas fa-check-circle"></i> Active Users</button>
+                    <button class="main-tab" data-tab="resultsUpload"><i class="fas fa-cloud-upload-alt"></i> Upload Results</button>
                 </div>
 
-                <div class="bulk-update-card">
-                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
-                        <div>
-                            <h3><i class="fas fa-calendar-alt"></i> Bulk Expiry Update</h3>
-                            <p style="opacity: 0.9;">සියලුම පරිශීලකයින්ගේ වලංගු කාලය එකම දිනයකට වෙනස් කරන්න</p>
+                <!-- DASHBOARD TAB -->
+                <div id="dashboardTab" class="tab-content active">
+                    <div class="card-menu-grid">
+                        <div class="menu-card" onclick="switchTab('payments')" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                            <i class="fas fa-credit-card" style="color: white;"></i>
+                            <h3>Payment Requests</h3>
+                            <p>Pending payments</p>
+                            <div class="card-badge" id="pendingCountBadge">0</div>
                         </div>
-                        <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
-                            <input type="date" id="bulkExpiryDate" style="padding: 10px 16px; border: none; border-radius: 8px;">
-                            <button class="btn-white" onclick="bulkUpdateExpiry()"><i class="fas fa-sync-alt"></i> සියල්ල යාවත්කාලීන කරන්න</button>
+                        <div class="menu-card" onclick="switchTab('users')" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+                            <i class="fas fa-users" style="color: white;"></i>
+                            <h3>All Users</h3>
+                            <p>Total registered</p>
+                            <div class="card-badge" id="totalUsersBadge">0</div>
                         </div>
+                        <div class="menu-card" onclick="switchTab('active')" style="background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);">
+                            <i class="fas fa-check-circle" style="color: white;"></i>
+                            <h3>Active Users</h3>
+                            <p>Approved access</p>
+                            <div class="card-badge" id="activeUsersBadge">0</div>
+                        </div>
+                        <div class="menu-card" onclick="switchTab('users')" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">
+                            <i class="fas fa-clock" style="color: white;"></i>
+                            <h3>Expired Users</h3>
+                            <p>Need renewal</p>
+                            <div class="card-badge" id="expiredUsersBadge">0</div>
+                        </div>
+                    </div>
+
+                    <div class="bulk-update-card">
+                        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+                            <div>
+                                <h3><i class="fas fa-calendar-alt"></i> Bulk Expiry Update</h3>
+                                <p style="opacity: 0.9;">සියලුම පරිශීලකයින්ගේ වලංගු කාලය එකම දිනයකට වෙනස් කරන්න</p>
+                            </div>
+                            <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+                                <input type="date" id="bulkExpiryDate" style="padding: 10px 16px; border: none; border-radius: 8px;">
+                                <button class="btn-white" onclick="bulkUpdateExpiry()"><i class="fas fa-sync-alt"></i> සියල්ල යාවත්කාලීන කරන්න</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="charts-row">
+                        <div class="chart-card"><h3><i class="fas fa-chart-line"></i> Monthly Revenue</h3><canvas id="revenueChart"></canvas></div>
+                        <div class="chart-card"><h3><i class="fas fa-chart-bar"></i> User Status</h3><canvas id="userStatusChart"></canvas></div>
                     </div>
                 </div>
 
-                <div class="charts-row">
-                    <div class="chart-card"><h3><i class="fas fa-chart-line"></i> Monthly Revenue</h3><canvas id="revenueChart"></canvas></div>
-                    <div class="chart-card"><h3><i class="fas fa-chart-bar"></i> User Status</h3><canvas id="userStatusChart"></canvas></div>
-                </div>
-
-                <div class="tabs" id="adminTabs">
-                    <button class="tab active" onclick="showTab('payments', event)">💰 Payment Requests</button>
-                    <button class="tab" onclick="showTab('users', event)">👥 All Users</button>
-                    <button class="tab" onclick="showTab('active', event)">✅ Active Users</button>
-                    <button class="tab" onclick="showTab('resultsUpload', event)">📤 Upload Results</button>
-                </div>
-
-                <div id="paymentsTab" class="tab-content active">
+                <!-- PAYMENTS TAB -->
+                <div id="paymentsTab" class="tab-content">
                     <div class="search-bar">
                         <input type="text" id="paymentSearch" placeholder="🔍 Search by name or phone..." onkeyup="filterPayments()">
                         <button class="btn-primary" onclick="exportPaymentsToCSV()"><i class="fas fa-download"></i> Export CSV</button>
@@ -1108,6 +978,7 @@
                     <div id="paymentsList"></div>
                 </div>
 
+                <!-- USERS TAB -->
                 <div id="usersTab" class="tab-content">
                     <div class="search-bar">
                         <input type="text" id="userSearch" placeholder="🔍 Search by name or phone..." onkeyup="filterUsers()">
@@ -1132,6 +1003,7 @@
                     <div class="pagination" id="usersPagination"></div>
                 </div>
 
+                <!-- ACTIVE USERS TAB -->
                 <div id="activeTab" class="tab-content">
                     <div class="table-container">
                         <table>
@@ -1141,6 +1013,7 @@
                     </div>
                 </div>
 
+                <!-- UPLOAD RESULTS TAB -->
                 <div id="resultsUploadTab" class="tab-content">
                     <div class="results-upload-card">
                         <h2 style="margin-bottom:7px;"><i class="fas fa-cloud-upload-alt" style="color:#79a1ff;"></i> Upload Lottery Results</h2>
@@ -1165,25 +1038,21 @@
                                 <input type="file" id="resultImageFile" accept="image/*">
                                 <small>Storage: results/{date}/image.jpg</small>
                             </div>
-
                             <div class="upload-file-box">
                                 <label><i class="fas fa-file-pdf"></i> A4 PDF</label>
                                 <input type="file" id="resultA4File" accept="application/pdf,.pdf">
                                 <small>Storage: results/{date}/a4.pdf</small>
                             </div>
-
                             <div class="upload-file-box">
                                 <label><i class="fas fa-file-pdf"></i> 2 in 1 PDF</label>
                                 <input type="file" id="result2in1File" accept="application/pdf,.pdf">
                                 <small>Storage: results/{date}/2in1.pdf</small>
                             </div>
-
                             <div class="upload-file-box">
                                 <label><i class="fas fa-file-pdf"></i> NLB PDF</label>
                                 <input type="file" id="resultNlbFile" accept="application/pdf,.pdf">
                                 <small>Storage: results/{date}/nlb.pdf</small>
                             </div>
-
                             <div class="upload-file-box">
                                 <label><i class="fas fa-file-pdf"></i> DLB PDF</label>
                                 <input type="file" id="resultDlbFile" accept="application/pdf,.pdf">
@@ -1239,6 +1108,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
 
     <script>
+        // Firebase Config
         const firebaseConfig = {
             apiKey: "AIzaSyDIvLPukOF4T1p0DOkXjXQ-y-9mWME5QXw",
             authDomain: "krishanlotterysystem.firebaseapp.com",
@@ -1287,8 +1157,6 @@
         }
         const savedTheme = localStorage.getItem('theme') || 'light';
         setTheme(savedTheme);
-
-        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }
 
         // ==================== ADMIN LOGIN ====================
         window.adminLogin = async function() {
@@ -2024,81 +1892,69 @@
             }
         };
 
-        // ==================== TAB SWITCHING (FIXED & ROBUST) ====================
-        window.showTab = function(tab, ev) {
-            console.log('🔄 Switching to tab:', tab); // Debug log
+        // ==================== TAB SWITCHING (ROBUST) ====================
+        function switchTab(tab) {
+            console.log('🔄 Switching to tab:', tab);
 
-            // 1. Remove active class from all tab contents
+            // Hide all tab contents
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-            
-            // 2. Remove active class from all top tabs
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
 
-            // 3. Find the target tab content by ID
-            const target = document.getElementById(tab + 'Tab');
-            if (target) {
-                target.classList.add('active');
+            // Remove active from all main tabs
+            document.querySelectorAll('.main-tab').forEach(t => t.classList.remove('active'));
+
+            // Activate the target tab content
+            const targetContent = document.getElementById(tab + 'Tab');
+            if (targetContent) {
+                targetContent.classList.add('active');
                 console.log('✅ Activated:', tab + 'Tab');
             } else {
                 console.error('❌ Tab not found:', tab + 'Tab');
-                alert('Error: Tab not found! Please check console.');
+                alert('Error: Tab not found!');
                 return;
             }
 
-            // 4. Update top tab button active state (if clicked from top tab)
-            const clicked = ev?.target?.closest?.('.tab') || null;
-            if (clicked) {
-                clicked.classList.add('active');
+            // Activate corresponding main tab button
+            const tabButton = document.querySelector(`.main-tab[data-tab="${tab}"]`);
+            if (tabButton) {
+                tabButton.classList.add('active');
             }
 
-            // 5. Update page title
+            // Update page title
             const labelMap = {
+                dashboard: '📊 Dashboard',
                 payments: '💰 Payment Requests',
                 users: '👥 All Users',
                 active: '✅ Active Users',
                 resultsUpload: '📤 Upload Results'
             };
-            document.getElementById('pageTitle').innerHTML = clicked?.innerText || labelMap[tab] || 'Dashboard';
+            document.getElementById('pageTitle').innerHTML = labelMap[tab] || 'Dashboard';
 
-            // 6. Special actions for resultsUpload
+            // Special actions for resultsUpload
             if (tab === 'resultsUpload') {
                 setDefaultResultUploadDate();
                 loadResultsManager();
             }
-        };
+        }
 
-        // ==================== SIDEBAR MENU CLICK HANDLER ====================
-        document.querySelectorAll('.menu-item').forEach(item => {
-            item.addEventListener('click', (event) => {
-                const tab = item.dataset.tab;
-                console.log('🖱️ Sidebar clicked:', tab);
+        // Expose to global
+        window.switchTab = switchTab;
 
-                // Remove active class from all menu items
-                document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
-                item.classList.add('active');
-
-                if (tab === 'dashboard') {
-                    // Dashboard: Hide all tab contents, reset title
-                    document.getElementById('pageTitle').innerHTML = '📊 Dashboard';
-                    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-                    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-                    document.querySelector('.tab.active')?.classList.remove('active');
-                } else {
-                    // Call the main showTab function
-                    window.showTab(tab, event);
-                }
-
-                // Close sidebar on mobile
-                if (window.innerWidth <= 768) toggleSidebar();
+        // ==================== MAIN TABS CLICK HANDLER ====================
+        document.querySelectorAll('.main-tab').forEach(tab => {
+            tab.addEventListener('click', function(e) {
+                const tabName = this.dataset.tab;
+                switchTab(tabName);
             });
         });
 
-        // Auto-login check
+        // ==================== AUTO-LOGIN ====================
         auth.onAuthStateChanged(async (user) => {
             if (user) {
                 document.getElementById('loginSection').style.display = 'none';
                 document.getElementById('dashboardContent').style.display = 'block';
                 await loadAllData();
+                // Default to dashboard
+                switchTab('dashboard');
             }
         });
     </script>
