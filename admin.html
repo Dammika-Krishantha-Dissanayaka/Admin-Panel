@@ -1049,25 +1049,25 @@
 
             <div id="dashboardContent" style="display:none;">
                 <div class="card-menu-grid">
-                    <div class="menu-card" onclick="showTab('payments')" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                    <div class="menu-card" onclick="showTab('payments', event)" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
                         <i class="fas fa-credit-card" style="color: white;"></i>
                         <h3>Payment Requests</h3>
                         <p>Pending payments</p>
                         <div class="card-badge" id="pendingCountBadge">0</div>
                     </div>
-                    <div class="menu-card" onclick="showTab('users')" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+                    <div class="menu-card" onclick="showTab('users', event)" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
                         <i class="fas fa-users" style="color: white;"></i>
                         <h3>All Users</h3>
                         <p>Total registered</p>
                         <div class="card-badge" id="totalUsersBadge">0</div>
                     </div>
-                    <div class="menu-card" onclick="showTab('active')" style="background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);">
+                    <div class="menu-card" onclick="showTab('active', event)" style="background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);">
                         <i class="fas fa-check-circle" style="color: white;"></i>
                         <h3>Active Users</h3>
                         <p>Approved access</p>
                         <div class="card-badge" id="activeUsersBadge">0</div>
                     </div>
-                    <div class="menu-card" onclick="showTab('users')" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">
+                    <div class="menu-card" onclick="showTab('users', event)" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">
                         <i class="fas fa-clock" style="color: white;"></i>
                         <h3>Expired Users</h3>
                         <p>Need renewal</p>
@@ -1466,7 +1466,7 @@
             await loadAllData();
         };
 
-        // ==================== EXTEND USER EXPIRY (NEW FEATURE) ====================
+        // ==================== EXTEND USER EXPIRY ====================
         window.extendUser = async function(userId, days) {
             const user = allUsers.find(u => u.id === userId);
             if (!user) {
@@ -2024,45 +2024,71 @@
             }
         };
 
-        // ==================== TAB SWITCHING ====================
+        // ==================== TAB SWITCHING (FIXED & ROBUST) ====================
         window.showTab = function(tab, ev) {
+            console.log('🔄 Switching to tab:', tab); // Debug log
+
+            // 1. Remove active class from all tab contents
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            
+            // 2. Remove active class from all top tabs
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+
+            // 3. Find the target tab content by ID
             const target = document.getElementById(tab + 'Tab');
-            if (target) target.classList.add('active');
+            if (target) {
+                target.classList.add('active');
+                console.log('✅ Activated:', tab + 'Tab');
+            } else {
+                console.error('❌ Tab not found:', tab + 'Tab');
+                alert('Error: Tab not found! Please check console.');
+                return;
+            }
+
+            // 4. Update top tab button active state (if clicked from top tab)
             const clicked = ev?.target?.closest?.('.tab') || null;
-            if (clicked) clicked.classList.add('active');
-            const labelMap = { payments: 'Payment Requests', users: 'All Users', active: 'Active Users',
-                resultsUpload: 'Upload Results' };
+            if (clicked) {
+                clicked.classList.add('active');
+            }
+
+            // 5. Update page title
+            const labelMap = {
+                payments: '💰 Payment Requests',
+                users: '👥 All Users',
+                active: '✅ Active Users',
+                resultsUpload: '📤 Upload Results'
+            };
             document.getElementById('pageTitle').innerHTML = clicked?.innerText || labelMap[tab] || 'Dashboard';
+
+            // 6. Special actions for resultsUpload
             if (tab === 'resultsUpload') {
                 setDefaultResultUploadDate();
                 loadResultsManager();
             }
         };
 
-        // Sidebar menu click
+        // ==================== SIDEBAR MENU CLICK HANDLER ====================
         document.querySelectorAll('.menu-item').forEach(item => {
             item.addEventListener('click', (event) => {
                 const tab = item.dataset.tab;
+                console.log('🖱️ Sidebar clicked:', tab);
+
+                // Remove active class from all menu items
+                document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
+                item.classList.add('active');
+
                 if (tab === 'dashboard') {
-                    document.getElementById('pageTitle').innerHTML = 'Dashboard';
+                    // Dashboard: Hide all tab contents, reset title
+                    document.getElementById('pageTitle').innerHTML = '📊 Dashboard';
                     document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
                     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
                     document.querySelector('.tab.active')?.classList.remove('active');
                 } else {
-                    const tabMap = {
-                        'payments': 'payments',
-                        'users': 'users',
-                        'active': 'active',
-                        'resultsUpload': 'resultsUpload'
-                    };
-                    if (tabMap[tab]) {
-                        window.showTab(tabMap[tab], event);
-                    }
+                    // Call the main showTab function
+                    window.showTab(tab, event);
                 }
-                document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
-                item.classList.add('active');
+
+                // Close sidebar on mobile
                 if (window.innerWidth <= 768) toggleSidebar();
             });
         });
