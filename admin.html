@@ -916,7 +916,146 @@
         .expiry-today{color:var(--danger);font-weight:800}.expiry-soon{color:var(--warning);font-weight:800}
         @media(max-width:760px){.module-grid{grid-template-columns:1fr}.module-row,.winner-card{align-items:flex-start;flex-direction:column}.module-actions{width:100%}.module-actions button{flex:1}}
 
-    </style>
+    
+/* ==================== POLISHED ACTION BUTTONS ==================== */
+.main-content .btn,
+.main-content .btn-primary,
+.main-content .btn-white,
+.main-content .upload-actions button,
+.main-content .input-field + button {
+    min-height: 46px;
+    min-width: 170px;
+    padding: 11px 24px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: .1px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    cursor: pointer;
+    transition: transform .18s ease, box-shadow .18s ease, filter .18s ease;
+}
+
+.main-content .btn:hover,
+.main-content .btn-primary:hover,
+.main-content .btn-white:hover,
+.main-content .upload-actions button:hover {
+    transform: translateY(-1px);
+    filter: brightness(1.06);
+    box-shadow: 0 8px 22px rgba(0,0,0,.16);
+}
+
+.main-content .btn:active,
+.main-content .btn-primary:active,
+.main-content .btn-white:active,
+.main-content .upload-actions button:active {
+    transform: translateY(0);
+}
+
+.main-content .btn i,
+.main-content .btn-primary i,
+.main-content .btn-white i {
+    font-size: 14px;
+}
+
+/* File picker / Choose File */
+.main-content input[type="file"] {
+    width: 100%;
+    min-height: 50px;
+    padding: 7px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: rgba(255,255,255,.045);
+    color: var(--text-primary);
+    font-size: 13px;
+    cursor: pointer;
+    box-sizing: border-box;
+}
+
+.main-content input[type="file"]::file-selector-button {
+    min-width: 132px;
+    min-height: 36px;
+    margin-right: 12px;
+    padding: 8px 18px;
+    border: 0;
+    border-radius: 9px;
+    background: var(--primary);
+    color: #fff;
+    font-weight: 700;
+    font-size: 13px;
+    cursor: pointer;
+    transition: filter .18s ease, transform .18s ease;
+}
+
+.main-content input[type="file"]::file-selector-button:hover {
+    filter: brightness(1.08);
+    transform: translateY(-1px);
+}
+
+/* Main action areas */
+.main-content .upload-actions,
+.main-content .form-actions,
+.main-content .action-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+    margin-top: 18px;
+}
+
+.main-content .upload-actions .btn,
+.main-content .upload-actions .btn-primary,
+.main-content .form-actions .btn,
+.main-content .form-actions .btn-primary,
+.main-content .action-row .btn,
+.main-content .action-row .btn-primary {
+    min-width: 190px;
+}
+
+/* Settings / cards: prominent primary Save buttons */
+.main-content .chart-card > .btn-primary,
+.main-content .chart-card > .btn.btn-primary,
+.main-content .chart-card form .btn-primary {
+    min-width: 210px;
+}
+
+/* Keep small table buttons genuinely small */
+.main-content .btn-sm {
+    min-width: auto !important;
+    min-height: 34px !important;
+    padding: 7px 12px !important;
+    border-radius: 8px !important;
+    font-size: 12px !important;
+    gap: 5px !important;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+    .main-content .upload-actions,
+    .main-content .form-actions,
+    .main-content .action-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .main-content .upload-actions .btn,
+    .main-content .upload-actions .btn-primary,
+    .main-content .form-actions .btn,
+    .main-content .form-actions .btn-primary,
+    .main-content .action-row .btn,
+    .main-content .action-row .btn-primary {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .main-content input[type="file"]::file-selector-button {
+        min-width: 120px;
+    }
+}
+
+</style>
 </head>
 <body>
     <div class="app-container">
@@ -953,8 +1092,9 @@
                     <button class="main-tab" data-tab="resultsUpload"><i class="fas fa-cloud-upload-alt"></i> Upload Results</button>
                     <button class="main-tab" data-tab="qrResults"><i class="fas fa-qrcode"></i> QR Results Entry</button>
                     <button class="main-tab" data-tab="jackpots"><i class="fas fa-coins"></i> Jackpots & Mahajana</button>
-                    <button class="main-tab" data-tab="announcements"><i class="fas fa-bullhorn"></i> Announcements</button>
-                    <button class="main-tab" data-tab="majorWins"><i class="fas fa-trophy"></i> Major Wins</button>
+                    <button class="main-tab" data-tab="announcements"><i class="fas fa-bullhorn"></i> Special Announcement</button>
+                    <button class="main-tab" data-tab="specialImage"><i class="fas fa-image"></i> Special Image</button>
+                    <button class="main-tab" data-tab="majorWins"><i class="fas fa-trophy"></i> Major Wins / Winners</button>
                     <button class="main-tab" data-tab="assistants"><i class="fas fa-user-shield"></i> Assistants & Trust</button>
                     <button class="main-tab" data-tab="feedback"><i class="fas fa-comments"></i> Feedback</button>
                     <button class="main-tab" data-tab="settings"><i class="fas fa-sliders-h"></i> System Settings</button>
@@ -1188,6 +1328,23 @@
                             <label>Prize Structure (JSON - Optional to override)</label>
                             <textarea id="qrPrizeJson" rows="4" style="font-family:monospace;"></textarea>
                         </div>
+
+                        <!-- THREE LINES: only for Jaya / Ada / Jathika -->
+                        <div id="webThreeLinesContainer" style="display:none;margin-top:20px;padding:15px;border-radius:12px;background:rgba(255,255,255,0.03);border:1px solid var(--border);">
+                            <h4 style="margin-bottom:10px;font-size:13px;color:var(--info);">Three Lines (Jaya / Ada / Jathika)</h4>
+                            <div class="input-field" style="margin-bottom:8px;">
+                                <label>Top Line</label>
+                                <input type="text" id="qrTopLine" placeholder="e.g. 12 45 67">
+                            </div>
+                            <div class="input-field" style="margin-bottom:8px;">
+                                <label>Mid Line</label>
+                                <input type="text" id="qrMidLine" placeholder="e.g. 89 01 23">
+                            </div>
+                            <div class="input-field">
+                                <label>Bottom Line</label>
+                                <input type="text" id="qrBottomLine" placeholder="e.g. 45 67 89">
+                            </div>
+                        </div>
                         <button class="btn btn-success" style="width:100%;height:50px;" onclick="saveQRResultFromWeb()">
                             <i class="fas fa-save"></i> Save Draw Result
                         </button>
@@ -1218,36 +1375,32 @@
                     </div>
                 </div>
 
-                <!-- ANNOUNCEMENTS & WINNERS TAB -->
+                <!-- SPECIAL ANNOUNCEMENT TAB -->
                 <div id="announcementsTab" class="tab-content">
-                    <div class="module-grid">
-                        <div class="chart-card">
-                            <h3><i class="fas fa-image"></i> Special Announcement</h3>
-                            <div class="input-field"><label>Announcement Title</label><input type="text" id="announcementTitle" placeholder="විශේෂ නිවේදනය"></div>
-                            <div class="input-field"><label>Message</label><textarea id="announcementMessage" rows="4"></textarea></div>
-                            <div class="input-field"><label>Special Image</label><input type="file" id="announcementImage" accept="image/*"></div>
-                            <div id="announcementImagePreview" class="announcement-preview"></div>
-                            <div class="upload-date-row">
-                                <div class="input-field"><label>Start Date</label><input type="date" id="announcementStartDate"></div>
-                                <div class="input-field"><label>End Date</label><input type="date" id="announcementEndDate"></div>
-                            </div>
-                            <button class="btn btn-primary" style="width:100%;" onclick="saveAnnouncement()"><i class="fas fa-save"></i> Save Announcement</button>
+                    <div class="chart-card">
+                        <h3><i class="fas fa-bullhorn" style="color:var(--warning);"></i> Special Announcement</h3>
+                        <div class="input-field"><label>Announcement Title</label><input type="text" id="announcementTitle" placeholder="විශේෂ නිවේදනය"></div>
+                        <div class="input-field"><label>Message</label><textarea id="announcementMessage" rows="6" placeholder="නිවේදන පණිවිඩය"></textarea></div>
+                        <div class="upload-date-row">
+                            <div class="input-field"><label>Start Date</label><input type="date" id="announcementStartDate"></div>
+                            <div class="input-field"><label>End Date</label><input type="date" id="announcementEndDate"></div>
                         </div>
-                        <div class="chart-card">
-                            <h3><i class="fas fa-trophy" style="color:var(--warning);"></i> Major Wins / Winners</h3>
-                            <div class="upload-date-row">
-                                <div class="input-field"><label>Winner Name</label><input type="text" id="winnerName"></div>
-                                <div class="input-field"><label>Prize Amount (Rs.)</label><input type="number" id="winnerPrize"></div>
-                            </div>
-                            <div class="upload-date-row">
-                                <div class="input-field"><label>Lottery</label><input type="text" id="winnerLottery"></div>
-                                <div class="input-field"><label>Draw Number</label><input type="text" id="winnerDrawNo"></div>
-                            </div>
-                            <div class="input-field"><label>Winning Location</label><input type="text" id="winnerLocation"></div>
-                            <div class="input-field"><label>Winner Image (Optional)</label><input type="file" id="winnerImage" accept="image/*"></div>
-                            <button class="btn btn-success" style="width:100%;" onclick="saveMajorWinner()"><i class="fas fa-trophy"></i> Add Winner</button>
-                            <div id="winnersList" style="margin-top:18px;"></div>
+                        <button class="btn btn-primary" style="width:100%;" onclick="saveAnnouncement()"><i class="fas fa-save"></i> Save Announcement</button>
+                    </div>
+                </div>
+
+                <!-- SPECIAL IMAGE TAB -->
+                <div id="specialImageTab" class="tab-content">
+                    <div class="chart-card">
+                        <h3><i class="fas fa-image" style="color:var(--warning);"></i> Special Image</h3>
+                        <div class="input-field">
+                            <label>Choose Special Image</label>
+                            <input type="file" id="announcementImage" accept="image/*">
                         </div>
+                        <div id="announcementImagePreview" class="announcement-preview"></div>
+                        <button type="button" class="btn btn-primary" style="width:100%;" onclick="saveSpecialAnnouncementImage()">
+                            <i class="fas fa-image"></i> Save Special Image
+                        </button>
                     </div>
                 </div>
 
@@ -1260,7 +1413,7 @@
                             <div class="input-field"><label>Prize Amount</label><input type="text" id="winAmount" placeholder="e.g. Rs. 2,000,000"></div>
                         </div>
                         <div class="upload-date-row">
-                            <div class="input-field"><label>Lottery Name</label><select id="winLottery"><option value="">-- Select Lottery --</option></select><small id="winLotteryStatus" style="display:block;margin-top:7px;opacity:.75;"></small></div>
+                            <div class="input-field"><label>Lottery Name</label><select id="winLottery"><option value="">-- Select Lottery --</option></select><small style="display:block;margin-top:6px;opacity:.7;">App එකේ Lottery List එකෙන් තෝරන්න</small></div>
                             <div class="input-field"><label>Date</label><input type="date" id="winDate"></div>
                         </div>
                         <button class="btn btn-primary" onclick="addMajorWinFromWeb()"><i class="fas fa-plus"></i> Add Winner</button>
@@ -1461,14 +1614,12 @@
         window.filterPayments = function() { renderPayments(); };
 
         window.exportPaymentsToCSV = async function() {
-            let csv = "Date,User,Phone,Amount,Note,Status
-";
+            let csv = "Date,User,Phone,Amount,Note,Status\n";
             const snapshot = await db.collection('paymentRequests').get();
             snapshot.forEach(doc => {
                 const p = doc.data();
                 csv +=
-                    `"${new Date(p.paymentDate).toLocaleDateString()}","${p.userName}","${p.userPhone}","${p.amount}","${p.note||''}","${p.status}"
-`;
+                    `"${new Date(p.paymentDate).toLocaleDateString()}","${p.userName}","${p.userPhone}","${p.amount}","${p.note||''}","${p.status}"\n`;
             });
             downloadCSV(csv, "payments_export.csv");
         };
@@ -1572,8 +1723,7 @@
                 status: 'approved'
             });
 
-            alert(`✅ Expiry extended by ${days} days.
-New expiry: ${newExpiry.toLocaleDateString()}`);
+            alert(`✅ Expiry extended by ${days} days.\nNew expiry: ${newExpiry.toLocaleDateString()}`);
             await loadAllData();
         };
 
@@ -1744,13 +1894,11 @@ New expiry: ${newExpiry.toLocaleDateString()}`);
         }
 
         window.exportUsersToCSV = function() {
-            let csv = "Name,Phone,Status,Expiry Date,Devices
-";
+            let csv = "Name,Phone,Status,Expiry Date,Devices\n";
             allUsers.forEach(u => {
                 const expiry = u.expiryDate ? new Date(getExpiryDateSafe(u)).toLocaleDateString() : '-';
                 csv +=
-                    `"${u.fullName}","${u.phone}","${u.status}","${expiry}","${u.activeDevices?.length || 0}"
-`;
+                    `"${u.fullName}","${u.phone}","${u.status}","${expiry}","${u.activeDevices?.length || 0}"\n`;
             });
             downloadCSV(csv, "users_export.csv");
         };
@@ -2109,9 +2257,7 @@ New expiry: ${newExpiry.toLocaleDateString()}`);
             if (!item) return;
 
             if (!confirm(
-                    `${dateStr} Result එකේ files සියල්ල සහ Firestore document එක delete කරන්නද?
-
-මෙය undo කළ නොහැක.`
+                    `${dateStr} Result එකේ files සියල්ල සහ Firestore document එක delete කරන්නද?\n\nමෙය undo කළ නොහැක.`
                     )) return;
 
             try {
@@ -2146,9 +2292,7 @@ New expiry: ${newExpiry.toLocaleDateString()}`);
         }
         function escapeJs(value) {
             return String(value ?? '').replace(/\\/g,'\\\\').replace(/'/g,"\\'")
-                .replace(/\r/g,'\\r').replace(/
-/g,'\
-');
+                .replace(/\r/g,'\\r').replace(/\n/g,'\\n');
         }
 
         function formatSriLankanPhone(phone) {
@@ -2222,16 +2366,7 @@ New expiry: ${newExpiry.toLocaleDateString()}`);
             }
         }
         window.sendWhatsAppAlert = function(userName, phone, regNo) {
-            const msg = `ආයුබෝවන් ${userName},
-
-ඔබගේ KRISHAN LOTTERY SYSTEM ගිණුමේ වලංගු කාලය අවසන් වීමට ආසන්නයි.
-
-ලියාපදිංචි අංකය: ${regNo}
-
-කරුණාකර ඔබගේ subscription එක අලුත් කරගන්න.
-
-ස්තූතියි ❤️
-KRISHAN TECH & LOTTERY`;
+            const msg = `ආයුබෝවන් ${userName},\n\nඔබගේ KRISHAN LOTTERY SYSTEM ගිණුමේ වලංගු කාලය අවසන් වීමට ආසන්නයි.\n\nලියාපදිංචි අංකය: ${regNo}\n\nකරුණාකර ඔබගේ subscription එක අලුත් කරගන්න.\n\nස්තූතියි ❤️\nKRISHAN TECH & LOTTERY`;
             openWhatsApp(phone,msg);
         };
 
@@ -2340,17 +2475,33 @@ KRISHAN TECH & LOTTERY`;
             const message=document.getElementById('announcementMessage').value.trim();
             const startDate=document.getElementById('announcementStartDate').value;
             const endDate=document.getElementById('announcementEndDate').value;
-            const file=document.getElementById('announcementImage').files?.[0];
-            if(!title&&!message&&!file)return alert('Announcement data එකක් ඇතුළත් කරන්න.');
+            if(!title&&!message&&!startDate&&!endDate)return alert('Announcement data එකක් ඇතුළත් කරන්න.');
             try {
-                let imageUrl=null;
-                if(file) imageUrl=await uploadOneResultFile(file,`announcements/${Date.now()}_${file.name}`);
                 const payload={title,announcementTitle:title,message,startDate,endDate,updatedAt:firebase.firestore.FieldValue.serverTimestamp()};
-                if(imageUrl)payload.imageUrl=imageUrl;
                 await db.collection('settings').doc('special_announcement').set(payload,{merge:true});
                 alert('✅ Announcement saved!');
                 await loadAnnouncement();
             }catch(e){console.error(e);alert('❌ Announcement save failed: '+e.message);}
+        };
+
+        window.saveSpecialAnnouncementImage = async function() {
+            const file = document.getElementById('announcementImage')?.files?.[0];
+            if (!file) return alert('කරුණාකර Special Image එකක් තෝරන්න.');
+            try {
+                const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+                const imageUrl = await uploadOneResultFile(file, `announcements/${Date.now()}_${safeName}`);
+                await db.collection('settings').doc('special_announcement').set({
+                    imageUrl,
+                    imageUpdatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                }, {merge:true});
+                alert('✅ Special Image saved!');
+                await loadAnnouncement();
+                const input=document.getElementById('announcementImage'); if(input) input.value='';
+            } catch(e) {
+                console.error('Special image save failed:', e);
+                alert('❌ Special Image save failed: ' + e.message);
+            }
         };
 
         // ---- Winners
@@ -2422,29 +2573,26 @@ KRISHAN TECH & LOTTERY`;
             return d ? d.toLocaleDateString() : '';
         }
 
-        async function loadMajorWinsLotteryList() {
+        async function loadMajorWinLotteryList() {
             const select = document.getElementById('winLottery');
-            const status = document.getElementById('winLotteryStatus');
             if (!select) return;
-            select.innerHTML = '<option value="">⏳ Loading lotteries...</option>';
+            const currentValue = select.value;
+            select.innerHTML = '<option value="">-- Loading lotteries... --</option>';
             try {
                 const snap = await db.collection('lottery_tickets').get();
-                let rows = [];
+                const items = [];
                 snap.forEach(doc => {
                     const d = doc.data() || {};
-                    const name = d.nameSinhala || d.name || d.lotteryName || doc.id;
-                    rows.push({id: doc.id, name: name});
+                    const name = d.nameSinhala || d.name || doc.id;
+                    if (name) items.push({ id: doc.id, name: String(name) });
                 });
-                rows.sort((a,b) => a.name.localeCompare(b.name, 'si'));
-                select.innerHTML = '<option value="">-- Select Lottery --</option>' + rows.map(x => `<option value="${escapeHtml(x.name)}">${escapeHtml(x.name)}</option>`).join('');
-                if (!rows.length) {
-                    select.innerHTML = '<option value="">No lotteries found</option>';
-                    if (status) status.textContent = 'lottery_tickets collection එකේ lottery list එකක් හමු නොවීය.';
-                } else if (status) status.textContent = `${rows.length} lotteries loaded`;
+                items.sort((a,b) => a.name.localeCompare(b.name, 'si'));
+                select.innerHTML = '<option value="">-- Select Lottery --</option>' + items.map(x => `<option value="${escapeHtml(x.name)}">${escapeHtml(x.name)}</option>`).join('');
+                if (currentValue && items.some(x => x.name === currentValue)) select.value = currentValue;
+                if (!items.length) select.innerHTML = '<option value="">-- No lotteries found --</option>';
             } catch (e) {
-                console.error('Major wins lottery list error:', e);
+                console.error('Major win lottery list load error:', e);
                 select.innerHTML = '<option value="">Unable to load lotteries</option>';
-                if (status) status.textContent = 'Lottery list load failed: ' + e.message;
             }
         }
 
@@ -2675,8 +2823,27 @@ KRISHAN TECH & LOTTERY`);
                     html+=`<option value="${escapeHtml(doc.id)}" data-config='${escapeHtml(JSON.stringify(cfg))}'>${escapeHtml(d.nameSinhala||d.name||doc.id)}</option>`;
                 });
                 select.innerHTML=html;
-            }catch(e){console.error(e);select.innerHTML='<option value="">Unable to load lotteries</option>';}
+                updateThreeLinesVisibility();
+            }catch(e){console.error(e);select.innerHTML='<option value="">Unable to load lotteries</option>';updateThreeLinesVisibility();}
         }
+        function updateThreeLinesVisibility(){
+            const select=document.getElementById('qrLotterySelect');
+            const box=document.getElementById('webThreeLinesContainer');
+            if(!select||!box)return;
+            const selected=select.options[select.selectedIndex];
+            let cfg={};
+            try{cfg=selected?.dataset?.config?JSON.parse(selected.dataset.config):{};}catch(e){cfg={};}
+            const id=(select.value||'').toUpperCase();
+            const name=(cfg.nameSinhala||cfg.name||selected?.textContent||'').toUpperCase();
+            const isThreeLine=
+                id.includes('JAYA')||id.includes('ADA')||id.includes('JATHIKA')||
+                name.includes('JAYA')||name.includes('ADA')||name.includes('JATHIKA')||
+                name.includes('ජය')||name.includes('අද')||name.includes('ජාතික');
+            box.style.display=isThreeLine?'block':'none';
+        }
+
+        document.getElementById('qrLotterySelect')?.addEventListener('change',updateThreeLinesVisibility);
+
         window.saveQRResultFromWeb=async function(){
             const lotteryId=document.getElementById('qrLotterySelect').value;
             const drawNumber=document.getElementById('qrDrawNo').value.trim();
@@ -2684,6 +2851,9 @@ KRISHAN TECH & LOTTERY`);
             const letter=document.getElementById('qrLetter').value.trim().toUpperCase();
             const lagna=document.getElementById('qrLagna1').value;
             const special1=document.getElementById('qrSpecial1').value.trim();
+            const top=document.getElementById('qrTopLine')?.value.trim().toUpperCase()||'';
+            const mid=document.getElementById('qrMidLine')?.value.trim().toUpperCase()||'';
+            const bot=document.getElementById('qrBottomLine')?.value.trim().toUpperCase()||'';
             const numbersRaw=document.getElementById('qrNumbers').value.trim();
             const prizeRaw=document.getElementById('qrPrizeJson').value.trim();
             if(!lotteryId||!drawNumber||!drawDateStr||!numbersRaw)return alert('කරුණාකර අත්‍යවශ්‍ය සියලු දත්ත පුරවන්න.');
@@ -2695,7 +2865,7 @@ KRISHAN TECH & LOTTERY`);
             const timestamp=firebase.firestore.Timestamp.fromDate(new Date(drawDateStr+'T00:00:00'));
             let prizeStructure=lottery.prizeStructure||null;
             if(prizeRaw){try{prizeStructure=JSON.parse(prizeRaw);}catch(e){return alert('Prize Structure JSON එක නිවැරදි නැහැ.');}}
-            const data={lotteryName:lottery.name,drawNo:drawNumber,drawDate:timestamp,winningNumbers,winningLetter:letter,winningLagna1:lagna,specialNumbers:special1?[special1]:[],type:lottery.type,prizeStructure};
+            const data={lotteryName:lottery.name,drawNo:drawNumber,drawDate:timestamp,winningNumbers,winningLetter:letter,winningLagna1:lagna,specialNumbers:special1?[special1]:[],topLine:top,midLine:mid,bottomLine:bot,type:lottery.type,prizeStructure};
             const batch=db.batch();
             batch.set(db.collection('lottery_results').doc(lotteryId).collection('draws').doc(drawNumber),data);
             batch.set(db.collection('draw_results').doc(`${lotteryId}_${drawNumber}`),data);
@@ -2704,7 +2874,8 @@ KRISHAN TECH & LOTTERY`);
             try{await batch.commit();alert('✅ ප්‍රතිඵල සාර්ථකව සුරැකුණා!');clearQRResultForm();}catch(e){console.error(e);alert('❌ ප්‍රතිඵල සුරැකීමට නොහැකි විය: '+e.message);}
         };
         function clearQRResultForm(){
-            ['qrDrawNo','qrLetter','qrNumbers','qrSpecial1','qrPrizeJson'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
+            ['qrDrawNo','qrLetter','qrNumbers','qrSpecial1','qrPrizeJson','qrTopLine','qrMidLine','qrBottomLine'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
+            updateThreeLinesVisibility();
         }
 
         // ---- Tab-specific lazy loading
@@ -2712,8 +2883,9 @@ KRISHAN TECH & LOTTERY`);
             if(tab==='dashboard')loadExpiringSoonUsers();
             if(tab==='qrResults')loadLotteryList();
             if(tab==='jackpots'){loadJackpots();loadMahajanaData();}
-            if(tab==='announcements'){loadAnnouncement();loadWinners();}
-            if(tab==='majorWins'){loadMajorWinsLotteryList();loadMajorWins();}
+            if(tab==='announcements')loadAnnouncement();
+            if(tab==='specialImage')loadAnnouncement();
+            if(tab==='majorWins'){loadMajorWinLotteryList();loadMajorWins();}
             if(tab==='assistants')loadAllAssistants();
             if(tab==='feedback')loadFeedback();
             if(tab==='settings')loadWebSettings();
