@@ -2861,12 +2861,21 @@ KRISHAN TECH & LOTTERY`);
             let lottery;try{lottery=JSON.parse(opt.dataset.config);}catch(e){return alert('Lottery configuration JSON දෝෂයකි.');}
             const isDigitLottery=lotteryId==='MAHAJANA_SAMPATHA'||lotteryId==='SUPIRI_DHANA_SAMPATHA';
             const lotteryNameUpper=String(lottery.nameSinhala||lottery.name||'').toUpperCase();
-            const isThreeLine=
+            const selectedLotteryLabel=String(opt.textContent||'').toUpperCase();
+            const isThreeLineByName=
                 lotteryId.includes('JAYA')||lotteryId.includes('ADA')||lotteryId.includes('JATHIKA')||
                 String(lottery.name||'').toUpperCase().includes('JAYA')||
                 String(lottery.name||'').toUpperCase().includes('ADA')||
                 String(lottery.name||'').toUpperCase().includes('JATHIKA')||
-                lotteryNameUpper.includes('ජය')||lotteryNameUpper.includes('අද')||lotteryNameUpper.includes('ජාතික');
+                lotteryNameUpper.includes('ජය')||lotteryNameUpper.includes('අද')||lotteryNameUpper.includes('ජාතික')||
+                selectedLotteryLabel.includes('JAYA')||selectedLotteryLabel.includes('ADA')||selectedLotteryLabel.includes('JATHIKA')||
+                selectedLotteryLabel.includes('ජය')||selectedLotteryLabel.includes('අද')||selectedLotteryLabel.includes('ජාතික');
+
+            // If Top/Mid/Bottom has been entered, always treat this as a Three-Line result.
+            // This prevents Jaya Sampatha from incorrectly requiring the Winning Numbers field.
+            const hasThreeLineInput=!!(top||mid||bot);
+            const isThreeLine=isThreeLineByName||hasThreeLineInput;
+
             if(!lotteryId||!drawNumber||!drawDateStr || (isThreeLine ? (!top||!mid||!bot) : !numbersRaw)){
                 return alert('කරුණාකර අත්‍යවශ්‍ය සියලු දත්ත පුරවන්න.');
             }
