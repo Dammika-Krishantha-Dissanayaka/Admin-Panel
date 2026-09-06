@@ -1544,8 +1544,26 @@
             location.reload();
         };
 
+        // ==================== EXPIRY STATUS SYNC ====================
+        async function syncExpiredUsers() {
+            const snapshot = await db.collection('users').where('status', '==', 'approved').get();
+            const now = new Date();
+            const batch = db.batch();
+            let count = 0;
+            snapshot.docs.forEach(doc => {
+                const expiry = getExpiryDateSafe(doc.data());
+                if (expiry && expiry < now) {
+                    batch.update(doc.ref, { status: 'expired' });
+                    count++;
+                }
+            });
+            if (count > 0) await batch.commit();
+            return count;
+        }
+
         // ==================== LOAD ALL DATA ====================
         async function loadAllData() {
+            await syncExpiredUsers();
             await updateCardBadges();
             await loadPayments();
             await loadUsers();
@@ -1557,12 +1575,22 @@
         async function updateCardBadges() {
             const pending = await db.collection('paymentRequests').where('status', '==', 'pending').get();
             const totalUsers = await db.collection('users').get();
-            const activeUsers = await db.collection('users').where('status', '==', 'approved').get();
-            const expiredUsers = await db.collection('users').where('status', '==', 'expired').get();
+            const approvedUsers = await db.collection('users').where('status', '==', 'approved').get();
+            const allUsers = totalUsers.docs;
+            const now = new Date();
+            const activeCount = approvedUsers.docs.filter(doc => {
+                const expiry = getExpiryDateSafe(doc.data());
+                return expiry && expiry >= now;
+            }).length;
+            const expiredCount = allUsers.filter(doc => {
+                const u = doc.data();
+                const expiry = getExpiryDateSafe(u);
+                return !!expiry && expiry < now;
+            }).length;
             document.getElementById('pendingCountBadge').innerText = pending.size;
             document.getElementById('totalUsersBadge').innerText = totalUsers.size;
-            document.getElementById('activeUsersBadge').innerText = activeUsers.size;
-            document.getElementById('expiredUsersBadge').innerText = expiredUsers.size;
+            document.getElementById('activeUsersBadge').innerText = activeCount;
+            document.getElementById('expiredUsersBadge').innerText = expiredCount;
         }
 
         // ==================== PAYMENTS ====================
@@ -1842,15 +1870,20 @@
         // ==================== ACTIVE USERS ====================
         async function loadActiveUsers() {
             const snapshot = await db.collection('users').where('status', '==', 'approved').get();
-            document.getElementById('activeUsersList').innerHTML = snapshot.docs.map(doc => {
+            const now = new Date();
+            const activeDocs = snapshot.docs.filter(doc => {
+                const expiry = getExpiryDateSafe(doc.data());
+                return expiry && expiry >= now;
+            });
+            document.getElementById('activeUsersList').innerHTML = activeDocs.map(doc => {
                 const u = doc.data();
                 const expiry = getExpiryDateSafe(u);
-                const daysLeft = expiry ? Math.ceil((expiry - new Date()) / (1000 * 60 * 60 * 24)) : '-';
+                const daysLeft = Math.max(0, Math.ceil((expiry - now) / (1000 * 60 * 60 * 24)));
                 return `<tr>
                     <td><strong>${u.fullName}</strong></td>
                     <td>${u.phone}</td>
-                    <td>${expiry ? expiry.toLocaleDateString() : '-'}</td>
-                    <td>${daysLeft > 0 ? `${daysLeft} days` : '-'}</td>
+                    <td>${expiry.toLocaleDateString()}</td>
+                    <td>${daysLeft} days</td>
                     <td>${u.activeDevices?.length || 0}/2</td>
                 </tr>`;
             }).join('') || '<tr><td colspan="5">No active users</td></tr>';
@@ -2861,21 +2894,12 @@ KRISHAN TECH & LOTTERY`);
             let lottery;try{lottery=JSON.parse(opt.dataset.config);}catch(e){return alert('Lottery configuration JSON දෝෂයකි.');}
             const isDigitLottery=lotteryId==='MAHAJANA_SAMPATHA'||lotteryId==='SUPIRI_DHANA_SAMPATHA';
             const lotteryNameUpper=String(lottery.nameSinhala||lottery.name||'').toUpperCase();
-            const selectedLotteryLabel=String(opt.textContent||'').toUpperCase();
-            const isThreeLineByName=
+            const isThreeLine=
                 lotteryId.includes('JAYA')||lotteryId.includes('ADA')||lotteryId.includes('JATHIKA')||
                 String(lottery.name||'').toUpperCase().includes('JAYA')||
                 String(lottery.name||'').toUpperCase().includes('ADA')||
                 String(lottery.name||'').toUpperCase().includes('JATHIKA')||
-                lotteryNameUpper.includes('ජය')||lotteryNameUpper.includes('අද')||lotteryNameUpper.includes('ජාතික')||
-                selectedLotteryLabel.includes('JAYA')||selectedLotteryLabel.includes('ADA')||selectedLotteryLabel.includes('JATHIKA')||
-                selectedLotteryLabel.includes('ජය')||selectedLotteryLabel.includes('අද')||selectedLotteryLabel.includes('ජාතික');
-
-            // If Top/Mid/Bottom has been entered, always treat this as a Three-Line result.
-            // This prevents Jaya Sampatha from incorrectly requiring the Winning Numbers field.
-            const hasThreeLineInput=!!(top||mid||bot);
-            const isThreeLine=isThreeLineByName||hasThreeLineInput;
-
+                lotteryNameUpper.includes('ජය')||lotteryNameUpper.includes('අද')||lotteryNameUpper.includes('ජාතික');
             if(!lotteryId||!drawNumber||!drawDateStr || (isThreeLine ? (!top||!mid||!bot) : !numbersRaw)){
                 return alert('කරුණාකර අත්‍යවශ්‍ය සියලු දත්ත පුරවන්න.');
             }
