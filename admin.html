@@ -884,6 +884,38 @@
                 margin: 55px 10px;
             }
         }
+    
+        /* ===== ALL-IN-ONE ADMIN MODULES ===== */
+        .module-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+        .input-field{margin-bottom:14px}
+        .input-field label{display:block;color:var(--text-secondary);font-size:12px;font-weight:750;margin-bottom:7px}
+        .input-field input,.input-field select,.input-field textarea{width:100%;padding:11px 13px;border:1px solid var(--border);border-radius:11px;background:rgba(255,255,255,.045);color:var(--text);outline:none;transition:.25s}
+        .input-field input:focus,.input-field select:focus,.input-field textarea:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(91,124,250,.1)}
+        .input-field select option{background:#11192d;color:#fff}
+        .section-header{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:16px}
+        .section-header h3{margin-bottom:4px}
+        .section-header p{font-size:11px;color:var(--text-secondary)}
+        .count-badge{min-width:32px;height:32px;padding:0 10px;border-radius:20px;display:inline-flex;align-items:center;justify-content:center;background:rgba(91,124,250,.15);border:1px solid rgba(91,124,250,.2);color:var(--text);font-weight:800}
+        .module-list{display:grid;gap:10px}
+        .module-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 14px;border:1px solid var(--border);border-radius:14px;background:rgba(255,255,255,.025)}
+        .module-row .row-info{flex:1;min-width:0}
+        .module-row strong{display:block;margin-bottom:3px}
+        .module-row small{color:var(--text-secondary)}
+        .module-actions{display:flex;gap:6px;flex-wrap:wrap}
+        .empty-state,.error-state,.loading{text-align:center;padding:28px;color:var(--text-secondary);border:1px dashed var(--border);border-radius:14px}
+        .error-state{color:var(--danger)}
+        .qr-preview{display:none;margin-top:14px;padding:14px;border:1px solid rgba(52,211,153,.18);border-radius:14px;background:rgba(52,211,153,.04)}
+        .announcement-preview img,.winner-preview img{max-width:220px;max-height:150px;border-radius:12px;margin-top:8px;border:1px solid var(--border)}
+        .winner-card{display:flex;justify-content:space-between;gap:15px;align-items:center;padding:14px;border:1px solid var(--border);border-radius:15px;background:rgba(255,255,255,.02)}
+        .winner-card + .winner-card{margin-top:10px}
+        .winner-main{display:flex;gap:12px;align-items:center;min-width:0}
+        .winner-thumb{width:52px;height:52px;border-radius:12px;object-fit:cover;background:rgba(255,255,255,.04);border:1px solid var(--border)}
+        .settings-note{font-size:11px;color:var(--text-secondary);margin-top:7px}
+        .danger-zone{border:1px solid rgba(248,113,113,.18);background:rgba(248,113,113,.04);border-radius:14px;padding:13px;margin-top:14px}
+        .feedback-message{white-space:pre-wrap;word-break:break-word;color:var(--text-secondary);margin-top:6px}
+        .expiry-today{color:var(--danger);font-weight:800}.expiry-soon{color:var(--warning);font-weight:800}
+        @media(max-width:760px){.module-grid{grid-template-columns:1fr}.module-row,.winner-card{align-items:flex-start;flex-direction:column}.module-actions{width:100%}.module-actions button{flex:1}}
+
     </style>
 </head>
 <body>
@@ -919,6 +951,13 @@
                     <button class="main-tab" data-tab="users"><i class="fas fa-users"></i> Users</button>
                     <button class="main-tab" data-tab="active"><i class="fas fa-check-circle"></i> Active Users</button>
                     <button class="main-tab" data-tab="resultsUpload"><i class="fas fa-cloud-upload-alt"></i> Upload Results</button>
+                    <button class="main-tab" data-tab="qrResults"><i class="fas fa-qrcode"></i> QR Results Entry</button>
+                    <button class="main-tab" data-tab="jackpots"><i class="fas fa-coins"></i> Jackpots & Mahajana</button>
+                    <button class="main-tab" data-tab="announcements"><i class="fas fa-bullhorn"></i> Announcements</button>
+                    <button class="main-tab" data-tab="majorWins"><i class="fas fa-trophy"></i> Major Wins</button>
+                    <button class="main-tab" data-tab="assistants"><i class="fas fa-user-shield"></i> Assistants & Trust</button>
+                    <button class="main-tab" data-tab="feedback"><i class="fas fa-comments"></i> Feedback</button>
+                    <button class="main-tab" data-tab="settings"><i class="fas fa-sliders-h"></i> System Settings</button>
                 </div>
 
                 <!-- DASHBOARD TAB -->
@@ -1098,6 +1137,180 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- QR RESULTS TAB -->
+                <div id="qrResultsTab" class="tab-content">
+                    <div class="chart-card">
+                        <h2 style="margin-bottom:15px;"><i class="fas fa-edit" style="color:var(--warning);"></i> Enter Draw Results</h2>
+                        <div class="upload-date-row">
+                            <div class="input-field">
+                                <label>Select Lottery</label>
+                                <select id="qrLotterySelect"></select>
+                            </div>
+                            <div class="input-field">
+                                <label>Draw Number</label>
+                                <input type="number" id="qrDrawNo" placeholder="e.g. 2450">
+                            </div>
+                        </div>
+                        <div class="upload-date-row">
+                            <div class="input-field">
+                                <label>Draw Date</label>
+                                <input type="date" id="qrDrawDate">
+                            </div>
+                            <div class="input-field">
+                                <label>Winning Letter (if any)</label>
+                                <input type="text" id="qrLetter" maxlength="1" placeholder="e.g. A">
+                            </div>
+                        </div>
+                        <div class="input-field">
+                            <label>Winning Numbers (Space or Comma separated)</label>
+                            <input type="text" id="qrNumbers" placeholder="Mahajana: 123456  |  Other: 12 45 67 02">
+                        </div>
+                        <div class="upload-date-row">
+                            <div class="input-field">
+                                <label>Lagna 1</label>
+                                <select id="qrLagna1">
+                                    <option value="">None</option>
+                                    <option value="ARIES">මේෂ (ARIES)</option><option value="TAURUS">වෘෂභ (TAURUS)</option>
+                                    <option value="GEMINI">මිථුන (GEMINI)</option><option value="CANCER">කටක (CANCER)</option>
+                                    <option value="LEO">සිංහ (LEO)</option><option value="VIRGO">කන්‍යා (VIRGO)</option>
+                                    <option value="LIBRA">තුලා (LIBRA)</option><option value="SCORPIO">වෘශ්චික (SCORPIO)</option>
+                                    <option value="SAGITTARIUS">ධනු (SAGITTARIUS)</option><option value="CAPRICORN">මකර (CAPRICORN)</option>
+                                    <option value="AQUARIUS">කුම්භ (AQUARIUS)</option><option value="PISCES">මීන (PISCES)</option>
+                                </select>
+                            </div>
+                            <div class="input-field">
+                                <label>Special Number (Sp1 / Bonus)</label>
+                                <input type="text" id="qrSpecial1" placeholder="e.g. 05">
+                            </div>
+                        </div>
+                        <div class="input-field">
+                            <label>Prize Structure (JSON - Optional to override)</label>
+                            <textarea id="qrPrizeJson" rows="4" style="font-family:monospace;"></textarea>
+                        </div>
+                        <button class="btn btn-success" style="width:100%;height:50px;" onclick="saveQRResultFromWeb()">
+                            <i class="fas fa-save"></i> Save Draw Result
+                        </button>
+                    </div>
+                </div>
+
+                <!-- JACKPOTS TAB -->
+                <div id="jackpotsTab" class="tab-content">
+                    <div class="chart-card">
+                        <div class="section-header">
+                            <div><h3><i class="fas fa-coins" style="color:var(--warning);"></i> Update Today's Jackpots</h3>
+                            <p>Android Home Screen jackpot data</p></div>
+                        </div>
+                        <div id="jackpotsContainer"><div class="loading">Loading jackpots...</div></div>
+                        <button class="btn btn-primary" style="width:100%;margin-top:15px;" onclick="saveAllJackpots()">
+                            <i class="fas fa-save"></i> Save All Jackpots
+                        </button>
+                    </div>
+                    <div class="chart-card" style="margin-top:20px;">
+                        <h3><i class="fas fa-star" style="color:var(--primary);"></i> Mahajana Sampatha (Home Screen)</h3>
+                        <div class="upload-date-row">
+                            <div class="input-field"><label>Draw Date</label><input type="date" id="mjDate"></div>
+                            <div class="input-field"><label>Full Number</label><input type="text" id="mjNumber" placeholder="e.g. J 123456"></div>
+                        </div>
+                        <button class="btn btn-success" style="width:100%;" onclick="saveMahajanaData()">
+                            <i class="fas fa-sync-alt"></i> Update Home Screen Number
+                        </button>
+                    </div>
+                </div>
+
+                <!-- ANNOUNCEMENTS & WINNERS TAB -->
+                <div id="announcementsTab" class="tab-content">
+                    <div class="module-grid">
+                        <div class="chart-card">
+                            <h3><i class="fas fa-image"></i> Special Announcement</h3>
+                            <div class="input-field"><label>Announcement Title</label><input type="text" id="announcementTitle" placeholder="විශේෂ නිවේදනය"></div>
+                            <div class="input-field"><label>Message</label><textarea id="announcementMessage" rows="4"></textarea></div>
+                            <div class="input-field"><label>Special Image</label><input type="file" id="announcementImage" accept="image/*"></div>
+                            <div id="announcementImagePreview" class="announcement-preview"></div>
+                            <div class="upload-date-row">
+                                <div class="input-field"><label>Start Date</label><input type="date" id="announcementStartDate"></div>
+                                <div class="input-field"><label>End Date</label><input type="date" id="announcementEndDate"></div>
+                            </div>
+                            <button class="btn btn-primary" style="width:100%;" onclick="saveAnnouncement()"><i class="fas fa-save"></i> Save Announcement</button>
+                        </div>
+                        <div class="chart-card">
+                            <h3><i class="fas fa-trophy" style="color:var(--warning);"></i> Major Wins / Winners</h3>
+                            <div class="upload-date-row">
+                                <div class="input-field"><label>Winner Name</label><input type="text" id="winnerName"></div>
+                                <div class="input-field"><label>Prize Amount (Rs.)</label><input type="number" id="winnerPrize"></div>
+                            </div>
+                            <div class="upload-date-row">
+                                <div class="input-field"><label>Lottery</label><input type="text" id="winnerLottery"></div>
+                                <div class="input-field"><label>Draw Number</label><input type="text" id="winnerDrawNo"></div>
+                            </div>
+                            <div class="input-field"><label>Winning Location</label><input type="text" id="winnerLocation"></div>
+                            <div class="input-field"><label>Winner Image (Optional)</label><input type="file" id="winnerImage" accept="image/*"></div>
+                            <button class="btn btn-success" style="width:100%;" onclick="saveMajorWinner()"><i class="fas fa-trophy"></i> Add Winner</button>
+                            <div id="winnersList" style="margin-top:18px;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- MAJOR WINS TAB -->
+                <div id="majorWinsTab" class="tab-content">
+                    <div class="chart-card">
+                        <h3><i class="fas fa-trophy" style="color:var(--warning);"></i> Add Major Win</h3>
+                        <div class="upload-date-row">
+                            <div class="input-field"><label>Winner Name</label><input type="text" id="winName" placeholder="e.g. Sunil Perera"></div>
+                            <div class="input-field"><label>Prize Amount</label><input type="text" id="winAmount" placeholder="e.g. Rs. 2,000,000"></div>
+                        </div>
+                        <div class="upload-date-row">
+                            <div class="input-field"><label>Lottery Name</label><select id="winLottery"><option value="">-- Select Lottery --</option></select><small id="winLotteryStatus" style="display:block;margin-top:7px;opacity:.75;"></small></div>
+                            <div class="input-field"><label>Date</label><input type="date" id="winDate"></div>
+                        </div>
+                        <button class="btn btn-primary" onclick="addMajorWinFromWeb()"><i class="fas fa-plus"></i> Add Winner</button>
+                    </div>
+                    <div class="table-container" style="margin-top:20px;">
+                        <table id="majorWinsTable">
+                            <thead><tr><th>Winner</th><th>Prize</th><th>Lottery</th><th>Date</th><th>Action</th></tr></thead>
+                            <tbody id="majorWinsList"><tr><td colspan="5">Loading...</td></tr></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- ASSISTANTS & TRUST SCORE TAB -->
+                <div id="assistantsTab" class="tab-content">
+                    <div class="search-bar">
+                        <input type="text" id="assistantSearch" placeholder="🔍 Search by NIC or Name..." onkeyup="filterAssistants()">
+                        <button class="btn-primary" onclick="loadAllAssistants(true)"><i class="fas fa-sync"></i> Refresh</button>
+                    </div>
+                    <div class="table-container">
+                        <table>
+                            <thead><tr><th>Photo</th><th>Name</th><th>NIC</th><th>Agent (Owner)</th><th>Rating / Trust</th><th>Actions</th></tr></thead>
+                            <tbody id="assistantsList"><tr><td colspan="6">Loading...</td></tr></tbody>
+                        </table>
+                    </div>
+                    <div id="assistantDetailsPanel" class="chart-card" style="display:none;margin-top:20px;"></div>
+                </div>
+
+                <!-- FEEDBACK TAB -->
+                <div id="feedbackTab" class="tab-content">
+                    <div class="chart-card">
+                        <div class="section-header">
+                            <div><h3><i class="fas fa-comments"></i> User Feedback Management</h3><p>View, WhatsApp reply, or delete feedback.</p></div>
+                            <span id="feedbackCount" class="count-badge">0</span>
+                        </div>
+                        <div id="feedbackList"><div class="loading">Loading feedback...</div></div>
+                    </div>
+                </div>
+
+                <!-- SETTINGS TAB -->
+                <div id="settingsTab" class="tab-content">
+                    <div class="chart-card">
+                        <h3><i class="fas fa-sliders-h"></i> System Configuration</h3>
+                        <div class="input-field"><label>Lucky Message (Home Screen)</label><input type="text" id="webLuckyMsg"></div>
+                        <div class="input-field"><label>Monthly Price (Rs.)</label><input type="number" id="webMonthlyPrice"></div>
+                        <div class="input-field"><label>Min App Version (For Force Update)</label><input type="number" id="webMinVersion"></div>
+                        <button class="btn btn-primary" style="width:100%;" onclick="saveWebSettings()"><i class="fas fa-save"></i> Save Settings</button>
+                        <div class="settings-note">Firestore: settings/app_config</div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
@@ -1185,6 +1398,7 @@
             await loadUsers();
             await loadActiveUsers();
             await initCharts();
+            await loadExpiringSoonUsers();
         }
 
         async function updateCardBadges() {
@@ -1247,12 +1461,14 @@
         window.filterPayments = function() { renderPayments(); };
 
         window.exportPaymentsToCSV = async function() {
-            let csv = "Date,User,Phone,Amount,Note,Status\n";
+            let csv = "Date,User,Phone,Amount,Note,Status
+";
             const snapshot = await db.collection('paymentRequests').get();
             snapshot.forEach(doc => {
                 const p = doc.data();
                 csv +=
-                    `"${new Date(p.paymentDate).toLocaleDateString()}","${p.userName}","${p.userPhone}","${p.amount}","${p.note||''}","${p.status}"\n`;
+                    `"${new Date(p.paymentDate).toLocaleDateString()}","${p.userName}","${p.userPhone}","${p.amount}","${p.note||''}","${p.status}"
+`;
             });
             downloadCSV(csv, "payments_export.csv");
         };
@@ -1356,7 +1572,8 @@
                 status: 'approved'
             });
 
-            alert(`✅ Expiry extended by ${days} days.\nNew expiry: ${newExpiry.toLocaleDateString()}`);
+            alert(`✅ Expiry extended by ${days} days.
+New expiry: ${newExpiry.toLocaleDateString()}`);
             await loadAllData();
         };
 
@@ -1427,6 +1644,30 @@
         };
 
         window.bulkUpdateExpiry = async function() {
+            if (!auth.currentUser) {
+                alert('Admin login අවශ්‍යයි.');
+                return;
+            }
+
+            const adminPassword = prompt('🔐 සියලුම පරිශීලකයන්ගේ කල් ඉකුත්වීම යාවත්කාලීන කිරීමට Admin Password එක ඇතුළත් කරන්න:');
+            if (adminPassword === null) return;
+            if (!adminPassword.trim()) {
+                alert('❌ Admin Password එක ඇතුළත් කරන්න.');
+                return;
+            }
+
+            try {
+                const credential = firebase.auth.EmailAuthProvider.credential(
+                    auth.currentUser.email,
+                    adminPassword
+                );
+                await auth.currentUser.reauthenticateWithCredential(credential);
+            } catch (error) {
+                console.error('Admin password verification failed:', error);
+                alert('❌ Admin Password එක වැරදියි. Update එක සිදු කළේ නැහැ.');
+                return;
+            }
+
             const newExpiryDate = document.getElementById('bulkExpiryDate').value;
             if (!newExpiryDate) { alert('Please select a date'); return; }
             if (!confirm(`⚠️ Update ALL users expiry to ${newExpiryDate}?`)) return;
@@ -1503,11 +1744,13 @@
         }
 
         window.exportUsersToCSV = function() {
-            let csv = "Name,Phone,Status,Expiry Date,Devices\n";
+            let csv = "Name,Phone,Status,Expiry Date,Devices
+";
             allUsers.forEach(u => {
                 const expiry = u.expiryDate ? new Date(getExpiryDateSafe(u)).toLocaleDateString() : '-';
                 csv +=
-                    `"${u.fullName}","${u.phone}","${u.status}","${expiry}","${u.activeDevices?.length || 0}"\n`;
+                    `"${u.fullName}","${u.phone}","${u.status}","${expiry}","${u.activeDevices?.length || 0}"
+`;
             });
             downloadCSV(csv, "users_export.csv");
         };
@@ -1866,7 +2109,9 @@
             if (!item) return;
 
             if (!confirm(
-                    `${dateStr} Result එකේ files සියල්ල සහ Firestore document එක delete කරන්නද?\n\nමෙය undo කළ නොහැක.`
+                    `${dateStr} Result එකේ files සියල්ල සහ Firestore document එක delete කරන්නද?
+
+මෙය undo කළ නොහැක.`
                     )) return;
 
             try {
@@ -1891,6 +2136,588 @@
                 showResultUploadMessage(`Delete result error: ${managerEsc(error.message)}`, 'error');
             }
         };
+
+
+        // ==================== ALL-IN-ONE ADMIN MODULES ====================
+
+        function escapeHtml(value) {
+            return String(value ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;')
+                .replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+        }
+        function escapeJs(value) {
+            return String(value ?? '').replace(/\\/g,'\\\\').replace(/'/g,"\\'")
+                .replace(/\r/g,'\\r').replace(/
+/g,'\
+');
+        }
+
+        function formatSriLankanPhone(phone) {
+            if (!phone) return '';
+            let n = String(phone).replace(/\D/g,'');
+            if (n.startsWith('0')) n = '94' + n.substring(1);
+            else if (n.startsWith('7')) n = '94' + n;
+            return n;
+        }
+        function openWhatsApp(phone, message) {
+            const n = formatSriLankanPhone(phone);
+            if (!n || !/^947\d{8}$/.test(n)) {
+                alert('Invalid Sri Lankan phone number.');
+                return;
+            }
+            window.open(`https://wa.me/${n}?text=${encodeURIComponent(message)}`,'_blank');
+        }
+
+        // ---- User name editing
+        window.editUserName = async function(userId, currentName) {
+            const newName = prompt('Enter new name for the user:', currentName || '');
+            if (newName === null) return;
+            const name = newName.trim();
+            if (!name) return alert('කරුණාකර නමක් ඇතුළත් කරන්න.');
+            if (name === currentName) return;
+            try {
+                await db.collection('users').doc(userId).update({ fullName: name });
+                const u = allUsers.find(x => x.id === userId);
+                if (u) u.fullName = name;
+                renderUsersTable();
+                alert('✅ Name updated!');
+            } catch (e) {
+                console.error(e);
+                alert('❌ Name update failed: ' + e.message);
+            }
+        };
+
+        // ---- Expiring Soon
+        async function loadExpiringSoonUsers() {
+            const list = document.getElementById('expiringSoonList');
+            const count = document.getElementById('expiringSoonCount');
+            if (!list) return;
+            try {
+                const snap = await db.collection('users').get();
+                const today = new Date(); today.setHours(0,0,0,0);
+                const limit = new Date(today); limit.setDate(limit.getDate()+3); limit.setHours(23,59,59,999);
+                const users = [];
+                snap.forEach(doc => {
+                    const u = doc.data();
+                    const d = getExpiryDateSafe(u);
+                    if (!d) return;
+                    d.setHours(0,0,0,0);
+                    if (d >= today && d <= limit) {
+                        users.push({id:doc.id,...u,expiry:d,daysLeft:Math.ceil((d-today)/86400000)});
+                    }
+                });
+                users.sort((a,b)=>a.expiry-b.expiry);
+                count.textContent = users.length;
+                list.innerHTML = users.length ? users.map(u => {
+                    const name=u.fullName||u.name||'User', phone=u.phone||'', reg=u.regNo||u.registrationNo||u.id;
+                    const status=u.daysLeft===0?'🔴 Expires Today':u.daysLeft===1?'🟠 1 Day Left':`🟡 ${u.daysLeft} Days Left`;
+                    return `<div class="module-row">
+                        <div class="row-info"><strong>${escapeHtml(name)}</strong>
+                        <small>📱 ${escapeHtml(phone)} &nbsp; | &nbsp; 🆔 ${escapeHtml(reg)} &nbsp; | &nbsp; 📅 ${u.expiry.toLocaleDateString('en-GB')}</small></div>
+                        <div class="module-actions"><span class="${u.daysLeft<=1?'expiry-today':'expiry-soon'}">${status}</span>
+                        <button class="btn-sm btn-success" onclick="sendWhatsAppAlert('${escapeJs(name)}','${escapeJs(phone)}','${escapeJs(reg)}')"><i class="fab fa-whatsapp"></i> WhatsApp</button></div>
+                    </div>`;
+                }).join('') : '<div class="empty-state">✅ No subscriptions expiring within 3 days.</div>';
+            } catch(e) {
+                console.error(e); list.innerHTML='<div class="error-state">❌ Unable to load expiring users.</div>';
+            }
+        }
+        window.sendWhatsAppAlert = function(userName, phone, regNo) {
+            const msg = `ආයුබෝවන් ${userName},
+
+ඔබගේ KRISHAN LOTTERY SYSTEM ගිණුමේ වලංගු කාලය අවසන් වීමට ආසන්නයි.
+
+ලියාපදිංචි අංකය: ${regNo}
+
+කරුණාකර ඔබගේ subscription එක අලුත් කරගන්න.
+
+ස්තූතියි ❤️
+KRISHAN TECH & LOTTERY`;
+            openWhatsApp(phone,msg);
+        };
+
+        // ---- System Settings
+        async function loadWebSettings() {
+            try {
+                const doc=await db.collection('settings').doc('app_config').get();
+                const s=doc.exists?doc.data():{};
+                document.getElementById('webLuckyMsg').value=s.luckyMessage ?? s.marqueeText ?? s.luckyMsg ?? '';
+                document.getElementById('webMonthlyPrice').value=s.monthlyPrice ?? s.monthly_price ?? 500;
+                document.getElementById('webMinVersion').value=s.minVersion ?? s.minAppVersion ?? s.min_app_version ?? '';
+            } catch(e) { console.error(e); }
+        }
+        window.saveWebSettings = async function() {
+            const luckyMessage=document.getElementById('webLuckyMsg').value.trim();
+            const monthlyPrice=Number(document.getElementById('webMonthlyPrice').value);
+            const minVersion=Number(document.getElementById('webMinVersion').value);
+            if (!monthlyPrice || monthlyPrice<0) return alert('නිවැරදි Monthly Price එකක් ඇතුළත් කරන්න.');
+            if (!minVersion || minVersion<0) return alert('නිවැරදි Min App Version එකක් ඇතුළත් කරන්න.');
+            try {
+                await db.collection('settings').doc('app_config').set({
+                    luckyMessage, marqueeText:luckyMessage, monthlyPrice, minVersion,
+                    updatedAt:firebase.firestore.FieldValue.serverTimestamp(),
+                    updatedBy:auth.currentUser?.uid || null
+                },{merge:true});
+                alert('✅ System Settings saved successfully!');
+            } catch(e) { console.error(e); alert('❌ Settings save failed: '+e.message); }
+        };
+
+        // ---- Jackpots
+        let jackpotDocs=[];
+        async function loadJackpots() {
+            const c=document.getElementById('jackpotsContainer'); if(!c)return;
+            try {
+                const snap=await db.collection('jackpots').get();
+                jackpotDocs=[];
+                snap.forEach(doc=>jackpotDocs.push({id:doc.id,...doc.data()}));
+                if(!jackpotDocs.length) {
+                    c.innerHTML='<div class="empty-state">No jackpot documents found in <b>jackpots</b>.</div>'; return;
+                }
+                c.innerHTML=jackpotDocs.map((j,i)=>`
+                    <div class="module-row">
+                        <div class="row-info"><strong>${escapeHtml(j.nameSinhala||j.name||j.lotteryName||j.id)}</strong>
+                        <small>${escapeHtml(j.id)}</small></div>
+                        <div style="min-width:180px"><input type="number" id="jackpotAmount_${i}" value="${Number(j.amount ?? j.value ?? j.jackpot ?? 0)}" style="width:100%;padding:10px;border-radius:9px;border:1px solid var(--border);background:rgba(255,255,255,.05);color:var(--text)"></div>
+                    </div>`).join('');
+            } catch(e) { console.error(e); c.innerHTML='<div class="error-state">❌ Unable to load jackpots: '+escapeHtml(e.message)+'</div>'; }
+        }
+        window.saveAllJackpots = async function() {
+            if(!jackpotDocs.length) return alert('No jackpot records loaded.');
+            try {
+                const batch=db.batch();
+                jackpotDocs.forEach((j,i)=>{
+                    const amount=Number(document.getElementById(`jackpotAmount_${i}`).value);
+                    batch.set(db.collection('jackpots').doc(j.id),{amount,value:amount,updatedAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true});
+                });
+                await batch.commit(); alert('✅ All jackpots saved!');
+            } catch(e) { console.error(e); alert('❌ Jackpot save failed: '+e.message); }
+        };
+
+        // ---- Mahajana Results
+        async function loadMahajanaData() {
+            const date=document.getElementById('mjDate'), num=document.getElementById('mjNumber'); if(!date||!num)return;
+            const today=new Date().toISOString().slice(0,10); date.value=today;
+            try {
+                const d=await db.collection('mahajana_results').doc(today).get();
+                if(d.exists) {
+                    const x=d.data();
+                    num.value=x.fullNumber ?? x.number ?? x.winningNumber ?? '';
+                }
+            } catch(e){console.error(e);}
+        }
+        window.saveMahajanaData = async function() {
+            const date=document.getElementById('mjDate').value;
+            const fullNumber=document.getElementById('mjNumber').value.trim();
+            if(!date||!fullNumber)return alert('Draw Date සහ Full Number ඇතුළත් කරන්න.');
+            try {
+                await db.collection('mahajana_results').doc(date).set({
+                    id:date, date:firebase.firestore.Timestamp.fromDate(new Date(date+'T00:00:00')),
+                    fullNumber, number:fullNumber, winningNumber:fullNumber,
+                    updatedAt:firebase.firestore.FieldValue.serverTimestamp()
+                },{merge:true});
+                alert('✅ Mahajana Home Screen data updated!');
+            }catch(e){console.error(e);alert('❌ Mahajana save failed: '+e.message);}
+        };
+
+        // ---- Announcement
+        async function loadAnnouncement() {
+            try {
+                const d=await db.collection('settings').doc('special_announcement').get();
+                if(!d.exists)return;
+                const x=d.data();
+                document.getElementById('announcementTitle').value=x.title||x.announcementTitle||'';
+                document.getElementById('announcementMessage').value=x.message||'';
+                document.getElementById('announcementStartDate').value=x.startDate||'';
+                document.getElementById('announcementEndDate').value=x.endDate||'';
+                if(x.imageUrl)document.getElementById('announcementImagePreview').innerHTML=`<img src="${escapeHtml(x.imageUrl)}" alt="Announcement">`;
+            }catch(e){console.error(e);}
+        }
+        document.getElementById('announcementImage')?.addEventListener('change',function(){
+            const f=this.files?.[0], p=document.getElementById('announcementImagePreview');
+            if(f&&p){p.innerHTML='';const img=document.createElement('img');img.src=URL.createObjectURL(f);p.appendChild(img);}
+        });
+        window.saveAnnouncement = async function() {
+            const title=document.getElementById('announcementTitle').value.trim();
+            const message=document.getElementById('announcementMessage').value.trim();
+            const startDate=document.getElementById('announcementStartDate').value;
+            const endDate=document.getElementById('announcementEndDate').value;
+            const file=document.getElementById('announcementImage').files?.[0];
+            if(!title&&!message&&!file)return alert('Announcement data එකක් ඇතුළත් කරන්න.');
+            try {
+                let imageUrl=null;
+                if(file) imageUrl=await uploadOneResultFile(file,`announcements/${Date.now()}_${file.name}`);
+                const payload={title,announcementTitle:title,message,startDate,endDate,updatedAt:firebase.firestore.FieldValue.serverTimestamp()};
+                if(imageUrl)payload.imageUrl=imageUrl;
+                await db.collection('settings').doc('special_announcement').set(payload,{merge:true});
+                alert('✅ Announcement saved!');
+                await loadAnnouncement();
+            }catch(e){console.error(e);alert('❌ Announcement save failed: '+e.message);}
+        };
+
+        // ---- Winners
+        async function loadWinners() {
+            const c=document.getElementById('winnersList'); if(!c)return;
+            try {
+                let snap;
+                try {
+                    snap=await db.collection('winners_history').orderBy('createdAt','desc').limit(30).get();
+                } catch (queryError) {
+                    console.warn('Winners orderBy fallback:', queryError);
+                    snap=await db.collection('winners_history').limit(100).get();
+                }
+                const rows=[]; snap.forEach(d=>rows.push({id:d.id,...d.data()}));
+                rows.sort((a,b)=>{
+                    const av=a.createdAt?.toMillis?.() ?? a.createdAt?.seconds*1000 ?? 0;
+                    const bv=b.createdAt?.toMillis?.() ?? b.createdAt?.seconds*1000 ?? 0;
+                    return bv-av;
+                });
+                rows.splice(30);
+                c.innerHTML=rows.length?rows.map(w=>`
+                    <div class="winner-card">
+                        <div class="winner-main">${w.imageUrl?`<img class="winner-thumb" src="${escapeHtml(w.imageUrl)}">`:''}
+                            <div><strong>${escapeHtml(w.winnerName||w.name||'Winner')}</strong>
+                            <small style="display:block;color:var(--text-secondary)">🏆 Rs.${Number(w.prizeAmount??w.prize??0).toLocaleString()} · ${escapeHtml(w.lottery||w.lotteryName||'-')} · Draw ${escapeHtml(w.drawNo||'-')}</small>
+                            <small style="color:var(--text-secondary)">📍 ${escapeHtml(w.location||'-')}</small></div>
+                        </div>
+                        <button class="btn-sm btn-danger" onclick="deleteWinner('${escapeJs(w.id)}')"><i class="fas fa-trash"></i></button>
+                    </div>`).join(''):'<div class="empty-state">No winners found.</div>';
+            }catch(e){console.error(e);c.innerHTML='<div class="error-state">❌ Unable to load winners.</div>';}
+        }
+        window.saveMajorWinner = async function() {
+            const winnerName=document.getElementById('winnerName').value.trim();
+            const prizeAmount=Number(document.getElementById('winnerPrize').value);
+            const lottery=document.getElementById('winnerLottery').value.trim();
+            const drawNo=document.getElementById('winnerDrawNo').value.trim();
+            const location=document.getElementById('winnerLocation').value.trim();
+            const file=document.getElementById('winnerImage').files?.[0];
+            if(!winnerName||!prizeAmount)return alert('Winner Name සහ Prize Amount අවශ්‍යයි.');
+            try {
+                let imageUrl=null;
+                if(file)imageUrl=await uploadOneResultFile(file,`winners/${Date.now()}_${file.name}`);
+                const payload={winnerName,prizeAmount,lottery,drawNo,location,createdAt:firebase.firestore.FieldValue.serverTimestamp()};
+                if(imageUrl)payload.imageUrl=imageUrl;
+                await db.collection('winners_history').add(payload);
+                ['winnerName','winnerPrize','winnerLottery','winnerDrawNo','winnerLocation','winnerImage'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
+                await loadWinners(); alert('✅ Winner added!');
+            }catch(e){console.error(e);alert('❌ Winner save failed: '+e.message);}
+        };
+        window.deleteWinner=async function(id){
+            if(!confirm('මෙම winner record එක delete කරන්නද?'))return;
+            try{await db.collection('winners_history').doc(id).delete();await loadWinners();}catch(e){alert('❌ Delete failed: '+e.message);}
+        };
+
+        // ---- Major Wins Management (Android-compatible winners_history)
+        let majorWinsUnsubscribe = null;
+        let majorWinsCache = [];
+
+        function timestampToDate(value) {
+            if (!value) return null;
+            if (typeof value.toDate === 'function') return value.toDate();
+            if (value.seconds != null) return new Date(value.seconds * 1000);
+            const d = new Date(value);
+            return Number.isNaN(d.getTime()) ? null : d;
+        }
+
+        function formatFirestoreDate(value) {
+            const d = timestampToDate(value);
+            return d ? d.toLocaleDateString() : '';
+        }
+
+        async function loadMajorWinsLotteryList() {
+            const select = document.getElementById('winLottery');
+            const status = document.getElementById('winLotteryStatus');
+            if (!select) return;
+            select.innerHTML = '<option value="">⏳ Loading lotteries...</option>';
+            try {
+                const snap = await db.collection('lottery_tickets').get();
+                let rows = [];
+                snap.forEach(doc => {
+                    const d = doc.data() || {};
+                    const name = d.nameSinhala || d.name || d.lotteryName || doc.id;
+                    rows.push({id: doc.id, name: name});
+                });
+                rows.sort((a,b) => a.name.localeCompare(b.name, 'si'));
+                select.innerHTML = '<option value="">-- Select Lottery --</option>' + rows.map(x => `<option value="${escapeHtml(x.name)}">${escapeHtml(x.name)}</option>`).join('');
+                if (!rows.length) {
+                    select.innerHTML = '<option value="">No lotteries found</option>';
+                    if (status) status.textContent = 'lottery_tickets collection එකේ lottery list එකක් හමු නොවීය.';
+                } else if (status) status.textContent = `${rows.length} lotteries loaded`;
+            } catch (e) {
+                console.error('Major wins lottery list error:', e);
+                select.innerHTML = '<option value="">Unable to load lotteries</option>';
+                if (status) status.textContent = 'Lottery list load failed: ' + e.message;
+            }
+        }
+
+        window.addMajorWinFromWeb = async function() {
+            const winnerName = document.getElementById('winName')?.value.trim();
+            const prizeAmount = document.getElementById('winAmount')?.value.trim();
+            const lotteryName = document.getElementById('winLottery')?.value.trim();
+            const dateValue = document.getElementById('winDate')?.value;
+            if (!winnerName || !prizeAmount || !lotteryName || !dateValue) {
+                alert('කරුණාකර Winner Name, Prize, Lottery සහ Date සියල්ල ඇතුළත් කරන්න.');
+                return;
+            }
+            try {
+                const drawDate = firebase.firestore.Timestamp.fromDate(new Date(dateValue + 'T00:00:00'));
+                await db.collection('winners_history').add({
+                    winnerName,
+                    prizeAmount,
+                    lotteryName,
+                    date: drawDate,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                ['winName','winAmount','winLottery','winDate'].forEach(id => { const e=document.getElementById(id); if(e)e.value=''; });
+                alert('✅ Winner added successfully!');
+            } catch (e) {
+                console.error('Major win add error:', e);
+                alert('❌ Winner save failed: ' + e.message);
+            }
+        };
+
+        function loadMajorWins() {
+            const c = document.getElementById('majorWinsList');
+            if (!c) return;
+            if (majorWinsUnsubscribe) majorWinsUnsubscribe();
+            const render = snap => {
+                majorWinsCache = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                majorWinsCache.sort((a,b) => {
+                    const ad = timestampToDate(a.date)?.getTime() || timestampToDate(a.createdAt)?.getTime() || 0;
+                    const bd = timestampToDate(b.date)?.getTime() || timestampToDate(b.createdAt)?.getTime() || 0;
+                    return bd - ad;
+                });
+                c.innerHTML = majorWinsCache.map(w => `
+                    <tr>
+                        <td><strong>${escapeHtml(w.winnerName || w.name || '—')}</strong></td>
+                        <td>${escapeHtml(String(w.prizeAmount ?? w.prize ?? '—'))}</td>
+                        <td>${escapeHtml(w.lotteryName || w.lottery || '—')}</td>
+                        <td>${escapeHtml(formatFirestoreDate(w.date))}</td>
+                        <td><button class="btn-sm btn-danger" onclick="deleteMajorWin('${escapeJs(w.id)}')"><i class="fas fa-trash"></i> Delete</button></td>
+                    </tr>`).join('') || '<tr><td colspan="5">No major wins found.</td></tr>';
+            };
+            majorWinsUnsubscribe = db.collection('winners_history').onSnapshot(render, err => {
+                console.error('Major wins realtime error:', err);
+                c.innerHTML = `<tr><td colspan="5" class="error-state">❌ ${escapeHtml(err.message)}</td></tr>`;
+            });
+        }
+
+        window.deleteMajorWin = async function(id) {
+            if (!confirm('මෙම Major Win record එක delete කරන්නද?')) return;
+            try { await db.collection('winners_history').doc(id).delete(); }
+            catch (e) { alert('❌ Delete failed: ' + e.message); }
+        };
+
+        // ---- Assistants & Trust Score
+        let assistantsUnsubscribe = null;
+        let assistantReviewsUnsubscribe = null;
+        let assistantsCache = [];
+        let assistantReviewsCache = [];
+
+        function getAssistantTrust(nic, fallbackRating) {
+            const reviews = assistantReviewsCache.filter(r => String(r.nic || '').trim().toUpperCase() === String(nic || '').trim().toUpperCase());
+            if (!reviews.length) {
+                const r = Number(fallbackRating);
+                return { rating: Number.isFinite(r) && r > 0 ? r : null, count: 0, reviews: [] };
+            }
+            const total = reviews.reduce((sum, r) => sum + (Number(r.rating) || 0), 0);
+            return { rating: total / reviews.length, count: reviews.length, reviews };
+        }
+
+        function renderAssistants() {
+            const c = document.getElementById('assistantsList');
+            if (!c) return;
+            const q = (document.getElementById('assistantSearch')?.value || '').trim().toLowerCase();
+            const rows = assistantsCache.filter(a =>
+                String(a.name || '').toLowerCase().includes(q) || String(a.nic || '').toLowerCase().includes(q)
+            );
+            c.innerHTML = rows.map(a => {
+                const trust = getAssistantTrust(a.nic, a.rating);
+                const ratingText = trust.rating == null ? 'N/A' : `${trust.rating.toFixed(1)} / 5${trust.count ? ` (${trust.count})` : ''}`;
+                return `<tr>
+                    <td><img src="${escapeHtml(a.photoUrl || 'default_avatar.png')}" style="width:40px;height:40px;border-radius:50%;object-fit:cover;"></td>
+                    <td><strong>${escapeHtml(a.name || 'Unknown')}</strong><br><small>${escapeHtml(a.phone || '')}</small></td>
+                    <td>${escapeHtml(a.nic || '—')}</td>
+                    <td>${escapeHtml(a.agentName || a.agent || 'Unknown Agent')}</td>
+                    <td>⭐ ${escapeHtml(ratingText)}</td>
+                    <td>
+                        <button class="btn-sm btn-info" onclick="viewAssistantDetails('${escapeJs(a.id)}')">Details</button>
+                        <button class="btn-sm btn-danger" onclick="deleteAssistantWithRating('${escapeJs(a.id)}','${escapeJs(a.nic || '')}','${escapeJs(a.name || 'Assistant')}')">Remove</button>
+                    </td>
+                </tr>`;
+            }).join('') || '<tr><td colspan="6">No assistants found.</td></tr>';
+        }
+
+        function loadAllAssistants(forceRefresh = false) {
+            const c = document.getElementById('assistantsList');
+            if (!c) return;
+            if (assistantsUnsubscribe) assistantsUnsubscribe();
+            if (assistantReviewsUnsubscribe) assistantReviewsUnsubscribe();
+
+            assistantsUnsubscribe = db.collection('assistants').onSnapshot(snap => {
+                assistantsCache = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                renderAssistants();
+            }, err => {
+                console.error('Assistants realtime error:', err);
+                c.innerHTML = `<tr><td colspan="6" class="error-state">❌ ${escapeHtml(err.message)}</td></tr>`;
+            });
+
+            assistantReviewsUnsubscribe = db.collection('assistant_reviews').onSnapshot(snap => {
+                assistantReviewsCache = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                renderAssistants();
+                const openId = document.querySelector('#assistantDetailsPanel[data-assistant-id]')?.dataset.assistantId;
+                if (openId) viewAssistantDetails(openId);
+            }, err => {
+                console.error('Assistant reviews realtime error:', err);
+            });
+        }
+
+        window.filterAssistants = function() { renderAssistants(); };
+
+        window.viewAssistantDetails = function(docId) {
+            const panel = document.getElementById('assistantDetailsPanel');
+            const a = assistantsCache.find(x => x.id === docId);
+            if (!panel || !a) return;
+            const trust = getAssistantTrust(a.nic, a.rating);
+            panel.dataset.assistantId = docId;
+            const reviewHtml = trust.reviews.length ? trust.reviews.map(r => `
+                <div style="padding:12px 0;border-bottom:1px solid var(--border);">
+                    <strong>⭐ ${escapeHtml(String(r.rating ?? 'N/A'))}/5</strong>
+                    <span style="margin-left:10px;color:var(--text-secondary);">${escapeHtml(r.agentName || '—')}</span>
+                    <div style="margin-top:5px;">${escapeHtml(r.note || 'No note')}</div>
+                    <small style="color:var(--text-secondary);">${escapeHtml(formatFirestoreDate(r.timestamp))}</small>
+                </div>`).join('') : '<div class="empty-state">No previous reviews found.</div>';
+            panel.style.display = 'block';
+            panel.innerHTML = `
+                <div style="display:flex;justify-content:space-between;gap:15px;align-items:center;">
+                    <div><h3>🛡️ ${escapeHtml(a.name || 'Assistant')} — Trust Score</h3>
+                    <p style="color:var(--text-secondary);">NIC: ${escapeHtml(a.nic || '—')} · Agent: ${escapeHtml(a.agentName || a.agent || '—')}</p></div>
+                    <button class="btn-sm" onclick="document.getElementById('assistantDetailsPanel').style.display='none'">Close</button>
+                </div>
+                <div style="font-size:28px;margin:12px 0;">⭐ ${trust.rating == null ? 'N/A' : trust.rating.toFixed(2)} <small style="font-size:13px;color:var(--text-secondary);">/ 5 · ${trust.count} review(s)</small></div>
+                <div>${reviewHtml}</div>`;
+            panel.scrollIntoView({ behavior:'smooth', block:'nearest' });
+        };
+
+        window.deleteAssistantWithRating = async function(docId, nic, name) {
+            const rawRating = prompt(`Rate ${name} before removal (1-5 stars):`, '5');
+            if (rawRating === null) return;
+            const rating = Number(rawRating);
+            if (!Number.isFinite(rating) || rating < 1 || rating > 5) {
+                alert('❌ Rating එක 1 සහ 5 අතර අගයක් විය යුතුයි.');
+                return;
+            }
+            const note = prompt('Enter a brief note about this assistant (optional):', '') ?? '';
+            try {
+                await db.collection('assistant_reviews').add({
+                    nic, rating, note, agentName: 'Admin (Web Panel)',
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                await db.collection('assistants').doc(docId).delete();
+                alert('✅ Assistant removed and review added to Trust Score database.');
+            } catch (e) {
+                console.error('Assistant removal error:', e);
+                alert('❌ Assistant removal failed: ' + e.message);
+            }
+        };
+
+        // ---- Feedback
+        let feedbackUnsubscribe=null;
+        function loadFeedback(){
+            const c=document.getElementById('feedbackList'); if(!c)return;
+            if(feedbackUnsubscribe)feedbackUnsubscribe();
+            const renderFeedback = snap => {
+                const docs=snap.docs.slice().sort((a,b)=>{
+                    const av=a.data()?.timestamp?.toMillis?.() ?? a.data()?.timestamp?.seconds*1000 ?? 0;
+                    const bv=b.data()?.timestamp?.toMillis?.() ?? b.data()?.timestamp?.seconds*1000 ?? 0;
+                    return bv-av;
+                });
+                let html='';
+                docs.forEach(doc=>{
+                    const f=doc.data(), name=f.userName||f.fullName||'User', phone=f.userPhone||f.phone||'';
+                    html+=`<div class="payment-card"><div class="info"><strong>${escapeHtml(name)} ${phone?`(${escapeHtml(phone)})`:''}</strong>
+                        <div class="feedback-message">${escapeHtml(f.message||f.feedback||f.text||'')}</div></div>
+                        <div class="module-actions"><button class="btn-sm btn-success" onclick="replyWhatsApp('${escapeJs(phone)}','${escapeJs(name)}')"><i class="fab fa-whatsapp"></i> Reply</button>
+                        <button class="btn-sm btn-danger" onclick="deleteFeedback('${escapeJs(doc.id)}')"><i class="fas fa-trash"></i> Delete</button></div></div>`;
+                });
+                c.innerHTML=html||'<div class="empty-state">No feedback found.</div>';
+                const b=document.getElementById('feedbackCount');if(b)b.textContent=docs.length;
+            };
+            const q=db.collection('feedback').orderBy('timestamp','desc');
+            feedbackUnsubscribe=q.onSnapshot(renderFeedback,async err=>{
+                console.warn('Feedback orderBy failed; using fallback:',err);
+                if(feedbackUnsubscribe) feedbackUnsubscribe();
+                try {
+                    const snap=await db.collection('feedback').limit(100).get();
+                    renderFeedback(snap);
+                } catch(e) { console.error(e); c.innerHTML='<div class="error-state">❌ Unable to load feedback: '+escapeHtml(e.message)+'</div>'; }
+            });
+        }
+        window.replyWhatsApp=function(phone,name){
+            openWhatsApp(phone,`ආයුබෝවන් ${name},
+
+ඔබගේ අදහසට ස්තූතියි! ❤️
+
+KRISHAN TECH & LOTTERY`);
+        };
+        window.deleteFeedback=async function(id){
+            if(!confirm('මෙම feedback එක මකා දැමීමට අවශ්‍යද?'))return;
+            try{await db.collection('feedback').doc(id).delete();}catch(e){alert('❌ Delete failed: '+e.message);}
+        };
+
+        // ---- QR Results: Android-matched schema
+        async function loadLotteryList(){
+            const select=document.getElementById('qrLotterySelect');if(!select)return;
+            try{
+                const snap=await db.collection('lottery_tickets').get();
+                let html='<option value="">-- Select Lottery --</option>';
+                snap.forEach(doc=>{
+                    const d=doc.data(), cfg={...d,id:doc.id};
+                    html+=`<option value="${escapeHtml(doc.id)}" data-config='${escapeHtml(JSON.stringify(cfg))}'>${escapeHtml(d.nameSinhala||d.name||doc.id)}</option>`;
+                });
+                select.innerHTML=html;
+            }catch(e){console.error(e);select.innerHTML='<option value="">Unable to load lotteries</option>';}
+        }
+        window.saveQRResultFromWeb=async function(){
+            const lotteryId=document.getElementById('qrLotterySelect').value;
+            const drawNumber=document.getElementById('qrDrawNo').value.trim();
+            const drawDateStr=document.getElementById('qrDrawDate').value;
+            const letter=document.getElementById('qrLetter').value.trim().toUpperCase();
+            const lagna=document.getElementById('qrLagna1').value;
+            const special1=document.getElementById('qrSpecial1').value.trim();
+            const numbersRaw=document.getElementById('qrNumbers').value.trim();
+            const prizeRaw=document.getElementById('qrPrizeJson').value.trim();
+            if(!lotteryId||!drawNumber||!drawDateStr||!numbersRaw)return alert('කරුණාකර අත්‍යවශ්‍ය සියලු දත්ත පුරවන්න.');
+            const opt=document.querySelector(`#qrLotterySelect option[value="${CSS.escape(lotteryId)}"]`);
+            if(!opt)return alert('Lottery configuration එක හමු නොවීය.');
+            let lottery;try{lottery=JSON.parse(opt.dataset.config);}catch(e){return alert('Lottery configuration JSON දෝෂයකි.');}
+            const isDigitLottery=lotteryId==='MAHAJANA_SAMPATHA'||lotteryId==='SUPIRI_DHANA_SAMPATHA';
+            const winningNumbers=isDigitLottery?numbersRaw.replace(/[\s,]+/g,'').split(''):numbersRaw.split(/[\s,]+/).filter(Boolean);
+            const timestamp=firebase.firestore.Timestamp.fromDate(new Date(drawDateStr+'T00:00:00'));
+            let prizeStructure=lottery.prizeStructure||null;
+            if(prizeRaw){try{prizeStructure=JSON.parse(prizeRaw);}catch(e){return alert('Prize Structure JSON එක නිවැරදි නැහැ.');}}
+            const data={lotteryName:lottery.name,drawNo:drawNumber,drawDate:timestamp,winningNumbers,winningLetter:letter,winningLagna1:lagna,specialNumbers:special1?[special1]:[],type:lottery.type,prizeStructure};
+            const batch=db.batch();
+            batch.set(db.collection('lottery_results').doc(lotteryId).collection('draws').doc(drawNumber),data);
+            batch.set(db.collection('draw_results').doc(`${lotteryId}_${drawNumber}`),data);
+            if(lottery.hasLagna&&lagna)batch.set(db.collection('lagna_results').doc(drawDateStr),{date:timestamp,id:drawDateStr,winningLagna:lagna});
+            batch.set(db.collection('results').doc(drawDateStr),{id:drawDateStr,date:timestamp,hasData:true},{merge:true});
+            try{await batch.commit();alert('✅ ප්‍රතිඵල සාර්ථකව සුරැකුණා!');clearQRResultForm();}catch(e){console.error(e);alert('❌ ප්‍රතිඵල සුරැකීමට නොහැකි විය: '+e.message);}
+        };
+        function clearQRResultForm(){
+            ['qrDrawNo','qrLetter','qrNumbers','qrSpecial1','qrPrizeJson'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
+        }
+
+        // ---- Tab-specific lazy loading
+        function loadTabData(tab){
+            if(tab==='dashboard')loadExpiringSoonUsers();
+            if(tab==='qrResults')loadLotteryList();
+            if(tab==='jackpots'){loadJackpots();loadMahajanaData();}
+            if(tab==='announcements'){loadAnnouncement();loadWinners();}
+            if(tab==='majorWins'){loadMajorWinsLotteryList();loadMajorWins();}
+            if(tab==='assistants')loadAllAssistants();
+            if(tab==='feedback')loadFeedback();
+            if(tab==='settings')loadWebSettings();
+        }
 
         // ==================== TAB SWITCHING (ROBUST) ====================
         function switchTab(tab) {
@@ -1925,9 +2752,21 @@
                 payments: '💰 Payment Requests',
                 users: '👥 All Users',
                 active: '✅ Active Users',
-                resultsUpload: '📤 Upload Results'
+                resultsUpload: '📤 Upload Results',
+                 qrResults: '📷 QR Results Entry',
+                 jackpots: '💰 Jackpots & Mahajana',
+                 announcements: '📢 Announcements',
+                 majorWins: '🏆 Major Wins Management',
+                 assistants: '🛡️ Assistants & Trust Score',
+                 feedback: '💬 User Feedback',
+                 settings: '⚙️ System Settings'
             };
             document.getElementById('pageTitle').innerHTML = labelMap[tab] || 'Dashboard';
+
+            // Load data required by the selected module.
+            // These modules are intentionally lazy-loaded so opening one tab
+            // always triggers its Firebase read instead of leaving it empty.
+            try { loadTabData(tab); } catch (e) { console.error('Tab data load error:', e); }
 
             // Special actions for resultsUpload
             if (tab === 'resultsUpload') {
