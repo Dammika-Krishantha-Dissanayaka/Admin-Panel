@@ -1597,7 +1597,40 @@
         async function loadPayments() {
             const snapshot = await db.collection('paymentRequests').where('status', '==', 'pending').get();
             paymentRequests = [];
-            snapshot.forEach(doc => paymentRequests.push({ id: doc.id, ...doc.data() }));
+
+            // Remove pending requests when the related user is already active.
+            // This also keeps the web panel in sync when the user's expiry was
+            // extended/activated from the mobile Admin Panel.
+            const requestsToDelete = [];
+            for (const doc of snapshot.docs) {
+                const p = doc.data();
+                let userIsActive = false;
+                try {
+                    if (p.userId) {
+                        const userSnap = await db.collection('users').doc(p.userId).get();
+                        if (userSnap.exists) {
+                            const u = userSnap.data();
+                            const expiry = getExpiryDateSafe(u);
+                            userIsActive = u.status === 'approved' && expiry && expiry >= new Date();
+                        }
+                    }
+                } catch (e) {
+                    console.warn('Could not check payment request user:', e);
+                }
+
+                if (userIsActive) {
+                    requestsToDelete.push(doc.ref);
+                } else {
+                    paymentRequests.push({ id: doc.id, ...p });
+                }
+            }
+
+            if (requestsToDelete.length) {
+                const batch = db.batch();
+                requestsToDelete.forEach(ref => batch.delete(ref));
+                await batch.commit();
+            }
+
             renderPayments();
         }
 
