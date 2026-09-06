@@ -2865,7 +2865,7 @@ KRISHAN TECH & LOTTERY`);
             const timestamp=firebase.firestore.Timestamp.fromDate(new Date(drawDateStr+'T00:00:00'));
             let prizeStructure=lottery.prizeStructure||null;
             if(prizeRaw){try{prizeStructure=JSON.parse(prizeRaw);}catch(e){return alert('Prize Structure JSON එක නිවැරදි නැහැ.');}}
-            const data={lotteryName:lottery.name,drawNo:drawNumber,drawDate:timestamp,winningNumbers,winningLetter:letter,winningLagna1:lagna,specialNumbers:special1?[special1]:[],topLine:top,midLine:mid,bottomLine:bot,type:lottery.type,prizeStructure};
+            const data={lotteryName:lottery.name,drawNo:drawNumber,drawDate:timestamp,draw_date:drawDateStr,winningNumbers,winningLetter:letter,winningLagna1:lagna,specialNumbers:special1?[special1]:[],topLine:top,midLine:mid,bottomLine:bot,type:lottery.type,prizeStructure};
             const batch=db.batch();
             batch.set(db.collection('lottery_results').doc(lotteryId).collection('draws').doc(drawNumber),data);
             batch.set(db.collection('draw_results').doc(`${lotteryId}_${drawNumber}`),data);
