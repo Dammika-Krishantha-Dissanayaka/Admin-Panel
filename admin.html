@@ -2933,10 +2933,14 @@ KRISHAN TECH & LOTTERY`);
                 String(lottery.name||'').toUpperCase().includes('ADA')||
                 String(lottery.name||'').toUpperCase().includes('JATHIKA')||
                 lotteryNameUpper.includes('ජය')||lotteryNameUpper.includes('අද')||lotteryNameUpper.includes('ජාතික');
-            if(!lotteryId||!drawNumber||!drawDateStr || (isThreeLine ? (!top||!mid||!bot) : !numbersRaw)){
-                return alert('කරුණාකර අත්‍යවශ්‍ය සියලු දත්ත පුරවන්න.');
+            // Only these 3 fields are mandatory: Lottery Name, Draw Number and Draw Date.
+            // Every other QR-entry field is optional and may be empty.
+            if(!lotteryId || !drawNumber || !drawDateStr){
+                return alert('කරුණාකර ලොතරැයියේ නම, දිනුම් වාරය සහ දිනය අනිවාර්යෙන් පුරවන්න.');
             }
-            const winningNumbers=isThreeLine?[]:(isDigitLottery?numbersRaw.replace(/[\s,]+/g,'').split(''):numbersRaw.split(/[\s,]+/).filter(Boolean));
+            const winningNumbers=isDigitLottery
+                ? (numbersRaw ? numbersRaw.replace(/[\s,]+/g,'').split('') : [])
+                : (numbersRaw ? numbersRaw.split(/[\s,]+/).filter(Boolean) : []);
             const timestamp=firebase.firestore.Timestamp.fromDate(new Date(drawDateStr+'T00:00:00'));
             let prizeStructure=lottery.prizeStructure||null;
             if(prizeRaw){try{prizeStructure=JSON.parse(prizeRaw);}catch(e){return alert('Prize Structure JSON එක නිවැරදි නැහැ.');}}
