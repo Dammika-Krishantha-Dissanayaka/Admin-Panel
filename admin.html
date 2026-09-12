@@ -1091,6 +1091,7 @@
                     <button class="main-tab" data-tab="active"><i class="fas fa-check-circle"></i> Active Users</button>
                     <button class="main-tab" data-tab="resultsUpload"><i class="fas fa-cloud-upload-alt"></i> Upload Results</button>
                     <button class="main-tab" data-tab="qrResults"><i class="fas fa-qrcode"></i> QR Results Entry</button>
+                    <button class="main-tab" data-tab="winningNumbers"><i class="fas fa-search"></i> ජය අංක පරීක්ෂාව</button>
                     <button class="main-tab" data-tab="jackpots"><i class="fas fa-coins"></i> Jackpots & Mahajana</button>
                     <button class="main-tab" data-tab="announcements"><i class="fas fa-bullhorn"></i> Special Announcement</button>
                     <button class="main-tab" data-tab="specialImage"><i class="fas fa-image"></i> Special Image</button>
@@ -1278,6 +1279,26 @@
                     </div>
                 </div>
 
+                <!-- MANUAL RESULT CHECK TAB -->
+                <div id="winningNumbersTab" class="tab-content">
+                    <div class="chart-card">
+                        <h2 style="margin-bottom:8px;"><i class="fas fa-search" style="color:var(--info);"></i> ජය අංක පරීක්ෂාව</h2>
+                        <p style="color:var(--text-secondary);font-size:12px;margin-bottom:18px;">Android QR Scan App එකෙන් ඇතුළත් කළ ප්‍රතිඵල පහසුවෙන් නැවත පරීක්ෂා කරන්න.</p>
+                        <div class="upload-date-row">
+                            <div class="input-field">
+                                <label>ලොතරැයිය</label>
+                                <select id="searchLotterySelect"><option value="ALL">සියලුම ලොතරැයි</option></select>
+                            </div>
+                            <div class="input-field">
+                                <label>දිනය</label>
+                                <input type="date" id="searchDate">
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" style="width:100%;margin-top:5px;" onclick="performManualSearch()"><i class="fas fa-search"></i> සොයන්න</button>
+                    </div>
+                    <div id="manualResultsContainer" style="margin-top:20px;"></div>
+                </div>
+
                 <!-- QR RESULTS TAB -->
                 <div id="qrResultsTab" class="tab-content">
                     <div class="chart-card">
@@ -1289,7 +1310,12 @@
                             </div>
                             <div class="input-field">
                                 <label>Draw Number</label>
-                                <input type="number" id="qrDrawNo" placeholder="e.g. 2450">
+                                <div style="display:flex;gap:8px;align-items:stretch;">
+                                    <input type="number" id="qrDrawNo" placeholder="e.g. 2450" style="flex:1;">
+                                    <button type="button" class="btn btn-info" onclick="searchExistingDrawFromWeb()" style="width:auto;min-width:125px;padding:0 16px;">
+                                        <i class="fas fa-search"></i> Search
+                                    </button>
+                                </div>
                             </div>
                         </div>
                         <div class="upload-date-row">
@@ -2957,10 +2983,94 @@ KRISHAN TECH & LOTTERY`);
             updateThreeLinesVisibility();
         }
 
+
+        // ---- Manual Result Check (Android QR data verification)
+        async function loadManualSearchLotteryList(){
+            const select=document.getElementById('searchLotterySelect'); if(!select)return;
+            try{
+                const snap=await db.collection('lottery_tickets').get();
+                let html='<option value="ALL">සියලුම ලොතරැයි</option>';
+                snap.forEach(doc=>{
+                    const d=doc.data();
+                    html+=`<option value="${escapeHtml(doc.id)}">${escapeHtml(d.nameSinhala||d.name||doc.id)}</option>`;
+                });
+                select.innerHTML=html;
+            }catch(e){console.error('Manual search lottery load failed',e);}
+        }
+        function manualSafe(v){return escapeHtml(String(v??''));}
+        function manualArray(v){
+            if(Array.isArray(v))return v;
+            if(v===null||v===undefined||v==='')return [];
+            return String(v).split(/[\s,]+/).filter(Boolean);
+        }
+        window.performManualSearch=async function(){
+            const lotteryId=document.getElementById('searchLotterySelect')?.value||'ALL';
+            const dateStr=document.getElementById('searchDate')?.value||'';
+            const c=document.getElementById('manualResultsContainer');
+            if(!dateStr){c.innerHTML='<div class="error-state">කරුණාකර දිනයක් තෝරන්න.</div>';return;}
+            c.innerHTML='<div class="loading"><i class="fas fa-spinner fa-spin"></i> ප්‍රතිඵල සොයමින් පවතී...</div>';
+            try{
+                let snap;
+                if(lotteryId==='ALL'){
+                    snap=await db.collectionGroup('draws').where('draw_date','==',dateStr).get();
+                }else{
+                    snap=await db.collection('lottery_results').doc(lotteryId).collection('draws').where('draw_date','==',dateStr).get();
+                }
+                if(snap.empty){c.innerHTML='<div class="empty-state">මෙම දිනයට ප්‍රතිඵල හමු නොවීය.</div>';return;}
+                let rows=[];
+                snap.forEach(doc=>rows.push({id:doc.id,d:doc.data()}));
+                rows.sort((a,b)=>String(a.d.lotteryName||'').localeCompare(String(b.d.lotteryName||'')));
+                c.innerHTML=rows.map(({id,d})=>{
+                    const nums=manualArray(d.winningNumbers);
+                    const specials=manualArray(d.specialNumbers);
+                    const lines=(d.topLine||d.midLine||d.bottomLine);
+                    return `<div class="chart-card" style="margin-bottom:14px;">
+                        <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center;">
+                          <h3><i class="fas fa-ticket-alt" style="color:var(--warning);"></i> ${manualSafe(d.lotteryName||lotteryId)}</h3>
+                          <span class="status-badge status-approved">වාරය: ${manualSafe(d.drawNo||id)}</span>
+                        </div>
+                        <div style="color:var(--text-secondary);font-size:12px;margin:5px 0 13px;">දිනය: ${manualSafe(d.draw_date||dateStr)}</div>
+                        ${d.winningLetter?`<div style="margin-bottom:9px;"><b>ජයග්‍රාහී අකුර:</b> <span class="card-badge">${manualSafe(d.winningLetter)}</span></div>`:''}
+                        ${nums.length?`<div style="margin-bottom:10px;"><b>ජයග්‍රාහී අංක:</b><div style="display:flex;gap:7px;flex-wrap:wrap;margin-top:7px;">${nums.map(n=>`<span class="card-badge" style="background:rgba(56,189,248,.18);border-color:rgba(56,189,248,.35);">${manualSafe(n)}</span>`).join('')}</div></div>`:''}
+                        ${d.winningLagna1?`<div style="margin:8px 0;color:var(--secondary);"><b>ලග්නය:</b> ${manualSafe(d.winningLagna1)}</div>`:''}
+                        ${lines?`<div style="margin-top:10px;padding:11px;border:1px solid var(--border);border-radius:12px;"><b>පේළි තුන:</b><div style="margin-top:6px;">Top: ${manualSafe(d.topLine||'-')}<br>Mid: ${manualSafe(d.midLine||'-')}<br>Bot: ${manualSafe(d.bottomLine||'-')}</div></div>`:''}
+                        ${specials.length?`<div style="margin-top:10px;color:var(--danger);"><b>විශේෂ අංක:</b> ${specials.map(manualSafe).join(', ')}</div>`:''}
+                    </div>`;
+                }).join('');
+            }catch(e){console.error(e);c.innerHTML='<div class="error-state">දෝෂයකි: '+manualSafe(e.message)+'</div>';}
+        };
+
+        // Search an existing draw and fill the QR result form for editing
+        window.searchExistingDrawFromWeb=async function(){
+            const lotteryId=document.getElementById('qrLotterySelect')?.value;
+            const drawNo=document.getElementById('qrDrawNo')?.value?.trim();
+            if(!lotteryId||!drawNo){ alert('කරුණාකර ප්‍රථමයෙන් ලොතරැයිය සහ වාර අංකය ඇතුළත් කරන්න.'); return; }
+            try{
+                const ref=db.collection('lottery_results').doc(lotteryId).collection('draws').doc(String(drawNo));
+                const snap=await ref.get();
+                if(!snap.exists){ alert('මෙම වාර අංකය සඳහා දත්ත හමු නොවීය.'); return; }
+                const d=snap.data()||{};
+                const set=(id,val)=>{const el=document.getElementById(id);if(el)el.value=val??'';};
+                set('qrDrawDate',d.draw_date||d.drawDate||'');
+                set('qrLetter',d.winningLetter||'');
+                const nums=Array.isArray(d.winningNumbers)?d.winningNumbers.join(' '):(d.winningNumbers||'');
+                set('qrNumbers',nums);
+                set('qrLagna1',d.winningLagna1||'');
+                set('qrTopLine',d.topLine||''); set('qrMidLine',d.midLine||''); set('qrBottomLine',d.bottomLine||'');
+                const specials=Array.isArray(d.specialNumbers)?d.specialNumbers:(d.specialNumbers?[d.specialNumbers]:[]);
+                set('qrSpecial1',specials[0]||'');
+                if(d.prizeStructure) set('qrPrizeJson',JSON.stringify(d.prizeStructure,null,2)); else set('qrPrizeJson','');
+                const btn=document.querySelector('[onclick="saveQRResultFromWeb()"]');
+                if(btn)btn.innerHTML='<i class="fas fa-sync-alt"></i> Update Draw Result';
+                alert('පැරණි දත්ත සොයාගත්තා. දැන් ඔබට ඒවා වෙනස් කර Update කළ හැකියි.');
+            }catch(e){console.error(e);alert('දෝෂයකි: '+e.message);}
+        };
+
         // ---- Tab-specific lazy loading
         function loadTabData(tab){
             if(tab==='dashboard')loadExpiringSoonUsers();
             if(tab==='qrResults')loadLotteryList();
+            if(tab==='winningNumbers')loadManualSearchLotteryList();
             if(tab==='jackpots'){loadJackpots();loadMahajanaData();}
             if(tab==='announcements')loadAnnouncement();
             if(tab==='specialImage')loadAnnouncement();
