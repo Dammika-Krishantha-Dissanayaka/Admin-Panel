@@ -1055,6 +1055,56 @@
     }
 }
 
+        /* ===== MAJOR WINS ===== */
+        .major-win-select,
+        .major-win-input {
+            width: 100%;
+        }
+        .major-win-select option {
+            background: #11192d;
+            color: #fff;
+        }
+        #majorWinMsg {
+            min-height: 20px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+        .major-win-summary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 11px;
+            border-radius: 12px;
+            background: rgba(251,191,36,.10);
+            border: 1px solid rgba(251,191,36,.18);
+            color: var(--warning);
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        /* ===== SUPER WINNER / SUPER JACKPOT ===== */
+        .super-winner-card {
+            background: linear-gradient(135deg, rgba(52,211,153,.08), rgba(91,124,250,.05));
+            border: 1px solid rgba(52,211,153,.16);
+            border-radius: 22px;
+            padding: 22px;
+            box-shadow: 0 18px 45px rgba(0,0,0,.12);
+        }
+        .super-winner-card .input-field select,
+        .super-winner-card .input-field input {
+            width: 100%;
+        }
+        .super-winner-card select option {
+            background: #11192d;
+            color: #fff;
+        }
+        .super-winner-note {
+            margin-top: 7px;
+            color: var(--text-secondary);
+            font-size: 11px;
+            line-height: 1.5;
+        }
+
 </style>
 </head>
 <body>
@@ -1096,6 +1146,7 @@
                     <button class="main-tab" data-tab="announcements"><i class="fas fa-bullhorn"></i> Special Announcement</button>
                     <button class="main-tab" data-tab="specialImage"><i class="fas fa-image"></i> Special Image</button>
                     <button class="main-tab" data-tab="majorWins"><i class="fas fa-trophy"></i> Major Wins / Winners</button>
+                    <button class="main-tab" data-tab="addWinner"><i class="fas fa-crown"></i> Add Winner / Super Jackpot</button>
                     <button class="main-tab" data-tab="assistants"><i class="fas fa-user-shield"></i> Assistants & Trust</button>
                     <button class="main-tab" data-tab="feedback"><i class="fas fa-comments"></i> Feedback</button>
                     <button class="main-tab" data-tab="settings"><i class="fas fa-sliders-h"></i> System Settings</button>
@@ -1430,25 +1481,198 @@
                     </div>
                 </div>
 
+                <!-- ADD WINNER / SUPER JACKPOT TAB -->
+                <div id="addWinnerTab" class="tab-content">
+                    <div class="super-winner-card">
+                        <div class="section-header">
+                            <div>
+                                <h2 style="margin-bottom:6px;color:var(--success);">
+                                    <i class="fas fa-trophy"></i> ප්‍රධාන ජැක්පොට් එක (Add Super Winner)
+                                </h2>
+                                <p>සම්පූර්ණ ජයමල්ල ඇදුණු විට ජයග්‍රාහකයාගේ තොරතුරු මෙතැනින් ඇතුළත් කරන්න.</p>
+                            </div>
+                            <span class="count-badge" id="superWinnerAgentStatus"><i class="fas fa-users"></i></span>
+                        </div>
+
+                        <div class="upload-date-row">
+                            <div class="input-field">
+                                <label>ජයග්‍රාහකයාගේ නම</label>
+                                <input type="text" id="swWinnerName" placeholder="උදා: කමල් පෙරේරා">
+                            </div>
+                            <div class="input-field">
+                                <label>ලොතරැයිය</label>
+                                <select id="swLottery">
+                                    <option value="ms">මහජන සම්පත</option>
+                                    <option value="gs">ගොවිසෙත</option>
+                                    <option value="dn">ධන නිධානය</option>
+                                    <option value="hh">හඳහන</option>
+                                    <option value="lv">ලග්න වාසනාව</option>
+                                    <option value="ak">අද කෝටිපති</option>
+                                    <option value="sv">ශනිදා වාසනාව</option>
+                                    <option value="kr">කප්රුක</option>
+                                    <option value="mp">මෙගා පවර්</option>
+                                    <option value="nj">NLB ජය</option>
+                                    <option value="sb">සුපර් බෝල්</option>
+                                    <option value="sds">සුපිරි ධන සම්පත</option>
+                                    <option value="sd">සුභ දවසක්</option>
+                                    <option value="as">අද සම්පත</option>
+                                    <option value="svn">සෙවණ</option>
+                                </select>
+                                <div class="super-winner-note">Lottery ID / short code එක save වේ.</div>
+                            </div>
+                        </div>
+
+                        <div class="upload-date-row">
+                            <div class="input-field">
+                                <label>මුදල (පෙන්වීමට)</label>
+                                <input type="text" id="swAmountText" placeholder="උදා: රු. 60,000,000">
+                            </div>
+                            <div class="input-field">
+                                <label>මුදල අගයක් ලෙස (Numbers only - for Agent Stats)</label>
+                                <input type="number" id="swAmountValue" min="0" step="1" placeholder="e.g. 60000000">
+                                <div class="super-winner-note">රු. 1,000,000 හෝ වැඩි නම් Agent Major Wins statistics update වේ.</div>
+                            </div>
+                        </div>
+
+                        <div class="upload-date-row">
+                            <div class="input-field">
+                                <label>නගරය</label>
+                                <input type="text" id="swLocation" placeholder="උදා: මීගමුව">
+                            </div>
+                            <div class="input-field">
+                                <label>නියෝජිතයා තෝරන්න (Select Agent)</label>
+                                <select id="swAgentSelect">
+                                    <option value="">-- නියෝජිතයා තෝරන්න --</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="upload-date-row">
+                            <div class="input-field">
+                                <label>දිනය</label>
+                                <input type="date" id="swDate">
+                            </div>
+                            <div class="input-field" style="display:flex;align-items:flex-end;">
+                                <button class="btn btn-success" style="width:100%;height:46px;" onclick="saveSuperWinner()">
+                                    <i class="fas fa-save"></i> Save Super Winner
+                                </button>
+                            </div>
+                        </div>
+
+                        <div id="superWinnerMsg" style="margin-top:12px;"></div>
+                    </div>
+                </div>
+
                 <!-- MAJOR WINS TAB -->
                 <div id="majorWinsTab" class="tab-content">
                     <div class="chart-card">
-                        <h3><i class="fas fa-trophy" style="color:var(--warning);"></i> Add Major Win</h3>
-                        <div class="upload-date-row">
-                            <div class="input-field"><label>Winner Name</label><input type="text" id="winName" placeholder="e.g. Sunil Perera"></div>
-                            <div class="input-field"><label>Prize Amount</label><input type="text" id="winAmount" placeholder="e.g. Rs. 2,000,000"></div>
+                        <div class="section-header">
+                            <div>
+                                <h2 style="margin-bottom:6px;"><i class="fas fa-trophy" style="color:var(--warning);"></i> Major Wins</h2>
+                                <p>ප්‍රධාන ජයග්‍රහණ / ලොතරැයි ජයග්‍රාහකයන්ගේ තොරතුරු ඇතුළත් කරන්න.</p>
+                            </div>
+                            <span class="count-badge" id="majorWinsCount">0</span>
                         </div>
-                        <div class="upload-date-row">
-                            <div class="input-field"><label>Lottery Name</label><select id="winLottery"><option value="">-- Select Lottery --</option></select><small style="display:block;margin-top:6px;opacity:.7;">App එකේ Lottery List එකෙන් තෝරන්න</small></div>
-                            <div class="input-field"><label>Date</label><input type="date" id="winDate"></div>
+
+                        <div class="module-grid">
+                            <div class="input-field">
+                                <label>ලොතරැයියේ නම</label>
+                                <select id="winLottery" class="major-win-select">
+                                    <option value="">-- ලොතරැයිය තෝරන්න --</option>
+                                    <option>මහජන සම්පත</option>
+                                    <option>ගොවිසෙත</option>
+                                    <option>ධන නිධානය</option>
+                                    <option>හඳහන</option>
+                                    <option>ලග්න වාසනාව</option>
+                                    <option>අද කෝටිපති</option>
+                                    <option>ශනිදා වාසනාව</option>
+                                    <option>කප්රුක</option>
+                                    <option>මෙගා පවර්</option>
+                                    <option>NLB ජය</option>
+                                    <option>සුපර් බෝල්</option>
+                                    <option>සුපිරි ධන සම්පත</option>
+                                    <option>සුභ දවසක්</option>
+                                    <option>අද සම්පත</option>
+                                    <option>සෙවණ</option>
+                                </select>
+                            </div>
+
+                            <div class="input-field">
+                                <label>ජයග්‍රාහී මුදල</label>
+                                <select id="winAmount" class="major-win-select" onchange="toggleCustomAmount()">
+                                    <option value="">-- මුදල තෝරන්න --</option>
+                                    <option value="1000000">ලක්ෂ 10</option>
+                                    <option value="2000000">ලක්ෂ 20</option>
+                                    <option value="2500000">ලක්ෂ 25</option>
+                                    <option value="5000000">ලක්ෂ 50</option>
+                                    <option value="10000000">ලක්ෂ 100</option>
+                                    <option value="10000000">කෝටි 1</option>
+                                    <option value="20000000">කෝටි 2</option>
+                                    <option value="50000000">කෝටි 5</option>
+                                    <option value="custom">වෙනත් මුදලක්</option>
+                                </select>
+                            </div>
                         </div>
-                        <button class="btn btn-primary" onclick="addMajorWinFromWeb()"><i class="fas fa-plus"></i> Add Winner</button>
+
+                        <div id="customAmountWrap" class="input-field" style="display:none;">
+                            <label>වෙනත් මුදල (රු.)</label>
+                            <input type="number" id="customAmount" class="major-win-input" min="0" step="1" placeholder="උදා: 7500000">
+                        </div>
+
+                        <div class="module-grid">
+                            <div class="input-field">
+                                <label>විකුණුම් නගරය / ස්ථානය</label>
+                                <input type="text" id="winLocation" class="major-win-input" placeholder="උදා: මීගමුව">
+                            </div>
+                            <div class="input-field">
+                                <label>නියෝජිතයාගේ නම</label>
+                                <input type="text" id="winAgent" class="major-win-input" placeholder="උදා: Dammika Krishantha">
+                            </div>
+                        </div>
+
+                        <div class="module-grid">
+                            <div class="input-field">
+                                <label>දිනය</label>
+                                <input type="date" id="winDate" class="major-win-input">
+                            </div>
+                            <div class="input-field" style="display:flex;align-items:flex-end;">
+                                <button class="btn btn-primary" style="width:100%;" onclick="saveMajorWinFromWeb()">
+                                    <i class="fas fa-save"></i> Major Win Save කරන්න
+                                </button>
+                            </div>
+                        </div>
+
+                        <div id="majorWinMsg" style="margin-top:12px;"></div>
                     </div>
-                    <div class="table-container" style="margin-top:20px;">
-                        <table id="majorWinsTable">
-                            <thead><tr><th>Winner</th><th>Prize</th><th>Lottery</th><th>Date</th><th>Action</th></tr></thead>
-                            <tbody id="majorWinsList"><tr><td colspan="5">Loading...</td></tr></tbody>
-                        </table>
+
+                    <div class="chart-card" style="margin-top:20px;">
+                        <div class="section-header">
+                            <div>
+                                <h3><i class="fas fa-list" style="color:var(--info);"></i> Major Wins History</h3>
+                                <p>අලුත්ම ජයග්‍රහණ මුලින් පෙන්වයි.</p>
+                            </div>
+                            <button class="btn btn-info" style="width:auto;min-width:130px;" onclick="loadMajorWins()">
+                                <i class="fas fa-sync-alt"></i> Refresh
+                            </button>
+                        </div>
+
+                        <div class="table-container">
+                            <table id="majorWinsTable">
+                                <thead>
+                                    <tr>
+                                        <th>ලොතරැයිය</th>
+                                        <th>ජයග්‍රාහී මුදල</th>
+                                        <th>විකුණුම් ස්ථානය</th>
+                                        <th>නියෝජිතයා</th>
+                                        <th>දිනය</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="majorWinsList">
+                                    <tr><td colspan="6">Loading...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
 
@@ -1560,6 +1784,8 @@
                 document.getElementById('loginSection').style.display = 'none';
                 document.getElementById('dashboardContent').style.display = 'block';
                 await loadAllData();
+                setDefaultSuperWinnerDate();
+                loadAgentsForWinners();
             } catch (e) {
                 msgDiv.innerHTML = '<span style="color:red;">❌ Invalid credentials</span>';
             }
@@ -2648,103 +2874,297 @@
             try{await db.collection('winners_history').doc(id).delete();await loadWinners();}catch(e){alert('❌ Delete failed: '+e.message);}
         };
 
-        // ---- Major Wins Management (Android-compatible winners_history)
+        // ---- Add Winner / Super Jackpot Management
+        let superWinnerAgentsLoaded = false;
+
+        function setDefaultSuperWinnerDate() {
+            const input = document.getElementById('swDate');
+            if (input && !input.value) {
+                const now = new Date();
+                const local = new Date(now.getTime() - now.getTimezoneOffset() * 60000);
+                input.value = local.toISOString().split('T')[0];
+            }
+        }
+
+        function showSuperWinnerMessage(message, type = 'success') {
+            const box = document.getElementById('superWinnerMsg');
+            if (!box) return;
+            const color = type === 'error' ? 'var(--danger)' : 'var(--success)';
+            box.innerHTML = `<div style="color:${color};padding:10px 12px;border-radius:10px;background:rgba(255,255,255,.035);border:1px solid var(--border);">${escapeHtml(message)}</div>`;
+            setTimeout(() => {
+                if (box) box.innerHTML = '';
+            }, 5000);
+        }
+
+        async function loadAgentsForWinners() {
+            const select = document.getElementById('swAgentSelect');
+            if (!select) return;
+
+            try {
+                select.innerHTML = '<option value="">Loading agents...</option>';
+
+                const snap = await db.collection("agents").get();
+                let html = '<option value="">-- නියෝජිතයා තෝරන්න --</option>';
+
+                snap.forEach(doc => {
+                    const a = doc.data() || {};
+                    const name = a.name || 'Unnamed Agent';
+                    const city = a.city || '—';
+                    html += `<option value="${escapeHtml(doc.id)}" data-name="${escapeHtml(name)}">${escapeHtml(name)} (${escapeHtml(city)})</option>`;
+                });
+
+                select.innerHTML = html;
+
+                const badge = document.getElementById('superWinnerAgentStatus');
+                if (badge) badge.innerHTML = `<i class="fas fa-users"></i> ${snap.size}`;
+
+                superWinnerAgentsLoaded = true;
+            } catch (e) {
+                console.error('loadAgentsForWinners error:', e);
+                select.innerHTML = '<option value="">Agents load failed</option>';
+                showSuperWinnerMessage('❌ Agents load failed: ' + e.message, 'error');
+            }
+        }
+
+        window.saveSuperWinner = async function() {
+            const winnerName = document.getElementById('swWinnerName')?.value.trim();
+            const lotterySelect = document.getElementById('swLottery');
+            const lotteryId = lotterySelect?.value || '';
+            const lotteryName = lotterySelect && lotterySelect.selectedIndex >= 0
+                ? lotterySelect.options[lotterySelect.selectedIndex].text
+                : '';
+            const amountText = document.getElementById('swAmountText')?.value.trim();
+            const amountValue = parseInt(document.getElementById('swAmountValue')?.value, 10) || 0;
+            const location = document.getElementById('swLocation')?.value.trim();
+            const dateStr = document.getElementById('swDate')?.value;
+
+            const agentSelect = document.getElementById('swAgentSelect');
+            const agentId = agentSelect?.value || '';
+            const agentName = agentId && agentSelect.selectedIndex >= 0
+                ? (agentSelect.options[agentSelect.selectedIndex].dataset.name || agentSelect.options[agentSelect.selectedIndex].text.split(' (')[0])
+                : '';
+
+            if (!winnerName || !amountText || !location || !dateStr) {
+                showSuperWinnerMessage('කරුණාකර ජයග්‍රාහකයාගේ නම, මුදල, නගරය සහ දිනය පුරවන්න.', 'error');
+                return;
+            }
+
+            if (!lotteryId) {
+                showSuperWinnerMessage('කරුණාකර ලොතරැයිය තෝරන්න.', 'error');
+                return;
+            }
+
+            try {
+                const winnerData = {
+                    id: lotteryId,
+                    date: dateStr,
+                    lotteryName: lotteryName,
+                    amount: amountText,
+                    amountValue: amountValue,
+                    location: location,
+                    winnerName: winnerName,
+                    agentId: agentId,
+                    agentName: agentName,
+                    timestamp: new Date().getTime()
+                };
+
+                // 1. Save to winners_history
+                await db.collection("winners_history").add(winnerData);
+
+                // 2. Update Agent Stats when amount >= 1,000,000 and an agent is selected.
+                if (amountValue >= 1000000 && agentId) {
+                    const agentRef = db.collection("agents").doc(agentId);
+
+                    await db.runTransaction(async (transaction) => {
+                        const doc = await transaction.get(agentRef);
+                        if (!doc.exists) return;
+
+                        const data = doc.data() || {};
+                        const currentMax = Number(data.maxWinValue || 0);
+                        const currentCount = Number(data.majorWinsCount || 0);
+                        const currentTotal = Number(data.totalWinValue || 0);
+
+                        const updates = {
+                            majorWinsCount: currentCount + 1,
+                            totalWinValue: currentTotal + amountValue
+                        };
+
+                        if (amountValue > currentMax) {
+                            updates.maxWinValue = amountValue;
+                        }
+
+                        transaction.update(agentRef, updates);
+                    });
+
+                    showSuperWinnerMessage('✅ දත්ත සහ නියෝජිත වාර්තා යාවත්කාලීන විය!');
+                } else {
+                    showSuperWinnerMessage('✅ දත්ත සාර්ථකව සුරකින ලදී!');
+                }
+
+                document.getElementById('swWinnerName').value = '';
+                document.getElementById('swAmountText').value = '';
+                document.getElementById('swAmountValue').value = '';
+                document.getElementById('swLocation').value = '';
+                document.getElementById('swAgentSelect').value = '';
+                setDefaultSuperWinnerDate();
+
+            } catch (e) {
+                console.error('saveSuperWinner error:', e);
+                showSuperWinnerMessage('❌ දෝෂයකි: ' + e.message, 'error');
+            }
+        };
+
+        // ---- Major Wins Management
         let majorWinsUnsubscribe = null;
         let majorWinsCache = [];
 
-        function timestampToDate(value) {
-            if (!value) return null;
-            if (typeof value.toDate === 'function') return value.toDate();
-            if (value.seconds != null) return new Date(value.seconds * 1000);
-            const d = new Date(value);
-            return Number.isNaN(d.getTime()) ? null : d;
+        function formatMajorWinAmount(value) {
+            if (value === null || value === undefined || value === '') return '—';
+            const n = Number(String(value).replace(/[^0-9.]/g, ''));
+            if (!Number.isFinite(n)) return String(value);
+            return 'රු. ' + n.toLocaleString('en-US');
         }
 
-        function formatFirestoreDate(value) {
-            const d = timestampToDate(value);
-            return d ? d.toLocaleDateString() : '';
+        function majorWinEsc(value) {
+            return escapeHtml(value == null ? '' : String(value));
         }
 
-        async function loadMajorWinLotteryList() {
-            const select = document.getElementById('winLottery');
-            if (!select) return;
-            const currentValue = select.value;
-            select.innerHTML = '<option value="">-- Loading lotteries... --</option>';
-            try {
-                const snap = await db.collection('lottery_tickets').get();
-                const items = [];
-                snap.forEach(doc => {
-                    const d = doc.data() || {};
-                    const name = d.nameSinhala || d.name || doc.id;
-                    if (name) items.push({ id: doc.id, name: String(name) });
-                });
-                items.sort((a,b) => a.name.localeCompare(b.name, 'si'));
-                select.innerHTML = '<option value="">-- Select Lottery --</option>' + items.map(x => `<option value="${escapeHtml(x.name)}">${escapeHtml(x.name)}</option>`).join('');
-                if (currentValue && items.some(x => x.name === currentValue)) select.value = currentValue;
-                if (!items.length) select.innerHTML = '<option value="">-- No lotteries found --</option>';
-            } catch (e) {
-                console.error('Major win lottery list load error:', e);
-                select.innerHTML = '<option value="">Unable to load lotteries</option>';
+        function setDefaultMajorWinDate() {
+            const input = document.getElementById('winDate');
+            if (input && !input.value) {
+                const now = new Date();
+                const local = new Date(now.getTime() - now.getTimezoneOffset() * 60000);
+                input.value = local.toISOString().split('T')[0];
             }
         }
 
-        window.addMajorWinFromWeb = async function() {
-            const winnerName = document.getElementById('winName')?.value.trim();
-            const prizeAmount = document.getElementById('winAmount')?.value.trim();
-            const lotteryName = document.getElementById('winLottery')?.value.trim();
-            const dateValue = document.getElementById('winDate')?.value;
-            if (!winnerName || !prizeAmount || !lotteryName || !dateValue) {
-                alert('කරුණාකර Winner Name, Prize, Lottery සහ Date සියල්ල ඇතුළත් කරන්න.');
+        window.toggleCustomAmount = function() {
+            const select = document.getElementById('winAmount');
+            const wrap = document.getElementById('customAmountWrap');
+            const input = document.getElementById('customAmount');
+            const isCustom = select?.value === 'custom';
+
+            if (wrap) wrap.style.display = isCustom ? 'block' : 'none';
+            if (input) {
+                input.required = isCustom;
+                if (!isCustom) input.value = '';
+            }
+        };
+
+        function showMajorWinMessage(message, type = 'success') {
+            const box = document.getElementById('majorWinMsg');
+            if (!box) return;
+            const color = type === 'error' ? 'var(--danger)' : 'var(--success)';
+            box.innerHTML = `<div style="color:${color};padding:10px 12px;border-radius:10px;background:rgba(255,255,255,.035);border:1px solid var(--border);">${majorWinEsc(message)}</div>`;
+            setTimeout(() => {
+                if (box) box.innerHTML = '';
+            }, 4500);
+        }
+
+        window.saveMajorWinFromWeb = async function() {
+            const lottery = document.getElementById('winLottery')?.value?.trim();
+            const amountSelect = document.getElementById('winAmount')?.value;
+            const customAmount = document.getElementById('customAmount')?.value?.trim();
+            const location = document.getElementById('winLocation')?.value?.trim();
+            const agent = document.getElementById('winAgent')?.value?.trim();
+            const dateStr = document.getElementById('winDate')?.value;
+
+            if (!lottery || !amountSelect || !location || !agent || !dateStr) {
+                showMajorWinMessage('කරුණාකර ලොතරැයිය, මුදල, ස්ථානය, නියෝජිතයා සහ දිනය සියල්ල ඇතුළත් කරන්න.', 'error');
                 return;
             }
+
+            let finalAmount = amountSelect;
+            if (amountSelect === 'custom') {
+                if (!customAmount || Number(customAmount) <= 0) {
+                    showMajorWinMessage('වෙනත් මුදලක් සඳහා වලංගු මුදලක් ඇතුළත් කරන්න.', 'error');
+                    return;
+                }
+                finalAmount = String(Math.round(Number(customAmount)));
+            }
+
+            const dateObj = new Date(dateStr + 'T00:00:00');
+            if (Number.isNaN(dateObj.getTime())) {
+                showMajorWinMessage('දිනය වලංගු නොවේ.', 'error');
+                return;
+            }
+
             try {
-                const drawDate = firebase.firestore.Timestamp.fromDate(new Date(dateValue + 'T00:00:00'));
-                await db.collection('winners_history').add({
-                    winnerName,
-                    prizeAmount,
-                    lotteryName,
-                    date: drawDate,
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                const data = {
+                    lotteryName: lottery,
+                    amount: finalAmount,
+                    location: location,
+                    agentName: agent,
+                    date: dateStr,
+                    timestamp: dateObj.getTime(),
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                };
+
+                await db.collection('major_wins_history').add(data);
+
+                ['winLottery', 'winAmount', 'customAmount', 'winLocation', 'winAgent'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.value = '';
                 });
-                ['winName','winAmount','winLottery','winDate'].forEach(id => { const e=document.getElementById(id); if(e)e.value=''; });
-                alert('✅ Winner added successfully!');
+
+                setDefaultMajorWinDate();
+                toggleCustomAmount();
+                showMajorWinMessage('✅ Major Win සාර්ථකව save කළා!');
             } catch (e) {
-                console.error('Major win add error:', e);
-                alert('❌ Winner save failed: ' + e.message);
+                console.error('Major Win save error:', e);
+                showMajorWinMessage('❌ Save failed: ' + e.message, 'error');
             }
         };
 
         function loadMajorWins() {
             const c = document.getElementById('majorWinsList');
             if (!c) return;
-            if (majorWinsUnsubscribe) majorWinsUnsubscribe();
-            const render = snap => {
-                majorWinsCache = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                majorWinsCache.sort((a,b) => {
-                    const ad = timestampToDate(a.date)?.getTime() || timestampToDate(a.createdAt)?.getTime() || 0;
-                    const bd = timestampToDate(b.date)?.getTime() || timestampToDate(b.createdAt)?.getTime() || 0;
-                    return bd - ad;
+
+            if (majorWinsUnsubscribe) {
+                majorWinsUnsubscribe();
+                majorWinsUnsubscribe = null;
+            }
+
+            c.innerHTML = '<tr><td colspan="6">Loading...</td></tr>';
+
+            majorWinsUnsubscribe = db.collection('major_wins_history')
+                .orderBy('timestamp', 'desc')
+                .onSnapshot(snap => {
+                    majorWinsCache = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+                    const count = document.getElementById('majorWinsCount');
+                    if (count) count.textContent = majorWinsCache.length;
+
+                    c.innerHTML = majorWinsCache.map(w => `
+                        <tr>
+                            <td><strong>${majorWinEsc(w.lotteryName || '—')}</strong></td>
+                            <td>${formatMajorWinAmount(w.amount)}</td>
+                            <td>${majorWinEsc(w.location || '—')}</td>
+                            <td>${majorWinEsc(w.agentName || '—')}</td>
+                            <td>${majorWinEsc(w.date || '—')}</td>
+                            <td>
+                                <button class="btn-sm btn-danger" onclick="deleteMajorWin('${escapeJs(w.id)}')">
+                                    <i class="fas fa-trash"></i> Delete
+                                </button>
+                            </td>
+                        </tr>
+                    `).join('') || '<tr><td colspan="6">No major wins found.</td></tr>';
+                }, err => {
+                    console.error('Major Wins realtime error:', err);
+                    c.innerHTML = `<tr><td colspan="6" class="error-state">❌ ${majorWinEsc(err.message)}</td></tr>`;
                 });
-                c.innerHTML = majorWinsCache.map(w => `
-                    <tr>
-                        <td><strong>${escapeHtml(w.winnerName || w.name || '—')}</strong></td>
-                        <td>${escapeHtml(String(w.prizeAmount ?? w.prize ?? '—'))}</td>
-                        <td>${escapeHtml(w.lotteryName || w.lottery || '—')}</td>
-                        <td>${escapeHtml(formatFirestoreDate(w.date))}</td>
-                        <td><button class="btn-sm btn-danger" onclick="deleteMajorWin('${escapeJs(w.id)}')"><i class="fas fa-trash"></i> Delete</button></td>
-                    </tr>`).join('') || '<tr><td colspan="5">No major wins found.</td></tr>';
-            };
-            majorWinsUnsubscribe = db.collection('winners_history').onSnapshot(render, err => {
-                console.error('Major wins realtime error:', err);
-                c.innerHTML = `<tr><td colspan="5" class="error-state">❌ ${escapeHtml(err.message)}</td></tr>`;
-            });
         }
 
-        window.deleteMajorWin = async function(id) {
+        window.deleteMajorWin = async function(docId) {
             if (!confirm('මෙම Major Win record එක delete කරන්නද?')) return;
-            try { await db.collection('winners_history').doc(id).delete(); }
-            catch (e) { alert('❌ Delete failed: ' + e.message); }
+
+            try {
+                await db.collection('major_wins_history').doc(docId).delete();
+                showMajorWinMessage('✅ Major Win record එක delete කළා!');
+            } catch (e) {
+                console.error('Major Win delete error:', e);
+                showMajorWinMessage('❌ Delete failed: ' + e.message, 'error');
+            }
         };
 
         // ---- Assistants & Trust Score
@@ -3074,7 +3494,8 @@ KRISHAN TECH & LOTTERY`);
             if(tab==='jackpots'){loadJackpots();loadMahajanaData();}
             if(tab==='announcements')loadAnnouncement();
             if(tab==='specialImage')loadAnnouncement();
-            if(tab==='majorWins'){loadMajorWinLotteryList();loadMajorWins();}
+            if(tab==='majorWins'){setDefaultMajorWinDate();toggleCustomAmount();loadMajorWins();}
+            if(tab==='addWinner'){setDefaultSuperWinnerDate();loadAgentsForWinners();}
             if(tab==='assistants')loadAllAssistants();
             if(tab==='feedback')loadFeedback();
             if(tab==='settings')loadWebSettings();
