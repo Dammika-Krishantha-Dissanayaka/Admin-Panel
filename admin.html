@@ -1212,7 +1212,7 @@
                 <!-- USERS TAB -->
                 <div id="usersTab" class="tab-content">
                     <div class="search-bar">
-                        <input type="text" id="userSearch" placeholder="🔍 Search by name or phone..." onkeyup="filterUsers()">
+                        <input type="text" id="userSearch" placeholder="🔍 Name, Phone, KLSA / KLSC Registration No..." oninput="filterUsers()">
                         <button class="btn-primary" onclick="exportUsersToCSV()"><i class="fas fa-download"></i> Export CSV</button>
                     </div>
                     <div class="bulk-bar" id="bulkBar" style="display:none;">
@@ -1227,7 +1227,7 @@
                     </div>
                     <div class="table-container">
                         <table>
-                            <thead><tr><th class="row-select"></th><th>Name</th><th>Phone</th><th>Status</th><th>Expiry Date</th><th>Devices</th><th>Actions</th></tr></thead>
+                            <thead><tr><th class="row-select"></th><th>Name</th><th>Phone</th><th>Registration No</th><th>Status</th><th>Expiry Date</th><th>Devices</th><th>Actions</th></tr></thead>
                             <tbody id="usersList"></tbody>
                         </table>
                     </div>
@@ -1947,6 +1947,7 @@
                     id: doc.id,
                     fullName: data.fullName || data.name || 'Unknown',
                     phone: data.phone || '-',
+                    registrationNo: String(data.registrationNo || ''),
                     status: data.status || 'pending',
                     expiryDate: data.expiryDate || null,
                     activeDevices: data.activeDevices || [],
@@ -1957,9 +1958,11 @@
         }
 
         function renderUsersTable() {
-            const search = document.getElementById('userSearch')?.value.toLowerCase() || '';
+            const search = (document.getElementById('userSearch')?.value || '').trim().toLocaleLowerCase();
             const filtered = allUsers.filter(u =>
-                u.fullName.toLowerCase().includes(search) || u.phone.includes(search)
+                String(u.fullName || '').toLocaleLowerCase().includes(search) ||
+                String(u.phone || '').includes(search) ||
+                String(u.registrationNo || '').toLocaleLowerCase().includes(search)
             );
             const totalPages = Math.ceil(filtered.length / usersPerPage);
             const start = (currentUserPage - 1) * usersPerPage;
@@ -1970,6 +1973,7 @@
                     <td class="row-select"><input type="checkbox" class="user-checkbox" data-id="${u.id}" onchange="updateSelectedUsers()"></td>
                     <td><strong>${u.fullName}</strong></td>
                     <td>${u.phone}</td>
+                    <td><strong style="color:var(--warning)">${u.registrationNo || '—'}</strong></td>
                     <td><span class="status-badge status-${u.status}">${u.status}</span></td>
                     <td>${u.expiryDate ? new Date(getExpiryDateSafe(u)).toLocaleDateString() : 'Not set'}</td>
                     <td>${u.activeDevices?.length || 0}/2</td>
